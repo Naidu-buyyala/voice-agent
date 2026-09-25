@@ -17,6 +17,7 @@ class AgentService:
         user_message: str,
         task: Optional[TaskModel] = None,
         last_assistant_message: Optional[str] = None,
+        latest_completed_task: Optional[dict[str, Any]] = None,
     ) -> tuple[str, str, dict[str, Any], Optional[dict[str, Any]], Optional[str]]:
         """
         Executes a turn through LangGraph and returns:
@@ -33,6 +34,7 @@ class AgentService:
             "task_id": task.id if task else None,
             "user_message": user_message,
             "last_assistant_message": last_assistant_message,
+            "latest_completed_task": latest_completed_task,
             "intent": None,
             "collected_data": collected,
             "missing_fields": [],

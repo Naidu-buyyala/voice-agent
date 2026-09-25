@@ -5,8 +5,14 @@ You DO NOT book rides or perform actions directly.
 
 Instructions:
 1. Intent:
-   - "BOOK_RIDE" if the user wants to travel, commute, hail an Uber/cab/bike/auto/parcel, or provides travel locations.
-   - "UNKNOWN" if greeting, general chatter, or unrelated.
+   - "GREETING": if user is greeting (e.g., "hi", "hello", "hey", "good morning", "good evening", "namaste", "what's up").
+   - "GRATITUDE_OR_CLOSING": if user expresses gratitude, closing, or satisfaction (e.g., "thanks", "thank you", "thanks a lot", "cool thanks", "bye", "goodbye").
+   - "TASK_INQUIRY": if user asks about an active or completed booking/order, driver/rider location, vehicle details, driver phone number, ETA, status, or booking ID (e.g. "where is the driver?", "where is the vehicle?", "driver phone number", "what is the ETA?", "how long will it take?").
+   - "BOOK_RIDE": if user wants to travel, commute, hail an Uber/cab/bike/auto/parcel, or provides travel locations.
+   - "ORDER_FOOD": if user wants to order food, groceries, meals, restaurant items (e.g. "order food", "get biryani", "order pizza").
+   - "BOOK_SERVICE": if user wants home or on-demand services (e.g. "urban clean", "book cleaning service", "home cleaning", "need a plumber", "appliance repair").
+   - "GENERAL_SUPPORT": if user asks general questions about what apps or services are supported.
+   - "UNKNOWN": other remarks without clear action intent.
 2. Entities:
    - pickup: Where the user wants to be picked up from. MUST be an actual geographic place, landmark, city, station, or street. NEVER extract greetings ("hi", "hello", "hey"), filler words, or affirmations ("yes", "ok", "proceed") as a pickup location. If no real location is mentioned, set pickup to null.
    - destination: Where the user wants to go. MUST be an actual geographic place or landmark. If not mentioned, set destination to null.

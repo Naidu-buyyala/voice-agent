@@ -48,6 +48,17 @@ class TaskRepository:
         result = await self.session.execute(stmt)
         return result.scalars().first()
 
+    async def get_latest_by_conversation(
+        self, conversation_id: str
+    ) -> Optional[TaskModel]:
+        stmt = (
+            select(TaskModel)
+            .where(TaskModel.conversation_id == conversation_id)
+            .order_by(TaskModel.created_at.desc())
+        )
+        result = await self.session.execute(stmt)
+        return result.scalars().first()
+
     async def update(
         self,
         task: TaskModel,

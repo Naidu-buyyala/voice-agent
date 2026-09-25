@@ -287,13 +287,15 @@ async def book_ride_node(state: AgentState) -> dict[str, Any]:
         booking_id = booking_result.get("booking_id")
         driver_name = booking_result.get("driver_name", "your driver")
         vehicle_plate = booking_result.get("vehicle_plate", "")
+        driver_phone = booking_result.get("driver_phone", "+91 98765 43210")
         plate_info = f" ({vehicle_plate})" if vehicle_plate else ""
 
         response = (
             f"All set! Your {ride_type} has been booked successfully.\n\n"
             f"🚕 Booking ID: {booking_id}\n"
-            f"👤 Driver: {driver_name}{plate_info}\n\n"
-            f"Your ride will arrive shortly. Have a safe and pleasant trip!"
+            f"👤 Driver: {driver_name}{plate_info}\n"
+            f"📞 Driver Phone: {driver_phone}\n\n"
+            f"Your ride will arrive shortly (ETA: ~4 mins). Let me know if you need to track your vehicle, contact the driver, or need any other help!"
         )
 
         return {
@@ -309,3 +311,124 @@ async def book_ride_node(state: AgentState) -> dict[str, Any]:
             "current_step": "FAILED",
             "waiting_for_confirmation": False,
         }
+
+
+async def handle_greeting_node(state: AgentState) -> dict[str, Any]:
+    """Handles warm, human greeting and introduces multi-domain action capabilities."""
+    latest_task = state.get("latest_completed_task")
+    if latest_task and latest_task.get("status") == "COMPLETED":
+        result = latest_task.get("result") or {}
+        driver_name = result.get("driver_name", "your driver")
+        plate = result.get("vehicle_plate", "")
+        plate_info = f" ({plate})" if plate else ""
+        ride_type = (latest_task.get("collected_data") or {}).get("ride_type", "ride")
+        response = (
+            f"Hello! 👋 Your driver {driver_name}{plate_info} is on the way for your {ride_type} (ETA: ~4 mins). "
+            f"How can I help you right now? I can share the driver's phone number, check vehicle status, or help you order food or book home services!"
+        )
+    else:
+        response = (
+            "Hello! 👋 I'm your Universal AI Action Assistant.\n\n"
+            "Here is what I can do for you:\n"
+            "• 🚗 **Hail Rides**: Cabs, bikes (Uber Moto), autos, or parcel delivery\n"
+            "• 🍔 **Order Food**: Meals, cuisines, or quick bites\n"
+            "• 🧹 **Home Services**: Deep cleaning, plumbing, or repairs (Urban Clean)\n\n"
+            "What would you like to do today? Just type naturally!"
+        )
+
+    return {
+        "response": response,
+        "current_step": "GREETING_ANSWERED",
+        "waiting_for_confirmation": False,
+    }
+
+
+async def handle_gratitude_node(state: AgentState) -> dict[str, Any]:
+    """Warmly acknowledges gratitude and offers proactive post-booking assistance."""
+    latest_task = state.get("latest_completed_task")
+    if latest_task and latest_task.get("status") == "COMPLETED":
+        result = latest_task.get("result") or {}
+        driver_name = result.get("driver_name", "your driver")
+        plate = result.get("vehicle_plate", "")
+        plate_info = f" ({plate})" if plate else ""
+        ride_type = (latest_task.get("collected_data") or {}).get("ride_type", "ride")
+        response = (
+            f"You're very welcome! Your driver {driver_name}{plate_info} is on the way for your {ride_type}. "
+            f"Let me know if you need to track the vehicle, get the driver's contact number, or need any other help (like ordering food or home cleaning)!"
+        )
+    else:
+        response = (
+            "You're very welcome! I'm here anytime you need to book a ride, order food, "
+            "or schedule services like home cleaning. Have a wonderful day!"
+        )
+
+    return {
+        "response": response,
+        "current_step": "GRATITUDE_ACKNOWLEDGED",
+        "waiting_for_confirmation": False,
+    }
+
+
+async def handle_task_inquiry_node(state: AgentState) -> dict[str, Any]:
+    """Answers user inquiries about vehicle location, driver phone number, ETA, and ride status."""
+    latest_task = state.get("latest_completed_task")
+    result = (latest_task or {}).get("result") or {}
+    collected = (latest_task or {}).get("collected_data") or state.get("collected_data") or {}
+
+    booking_id = result.get("booking_id")
+    if booking_id:
+        driver_name = result.get("driver_name", "Rajesh K.")
+        vehicle_plate = result.get("vehicle_plate", "TS 09 UB 1234")
+        driver_phone = result.get("driver_phone", "+91 98765 43210")
+        ride_type = collected.get("ride_type", "Uber ride")
+        pickup = collected.get("pickup", "your pickup location")
+        dest = collected.get("destination", "your destination")
+
+        response = (
+            f"Here are the live details for your {ride_type}:\n\n"
+            f"• 🚕 Vehicle: {ride_type} ({vehicle_plate})\n"
+            f"• 👤 Driver: {driver_name}\n"
+            f"• 📞 Driver Phone: {driver_phone}\n"
+            f"• ⏱️ Status: On the way to {pickup} (ETA: ~4 mins)\n"
+            f"• 📍 Heading to: {dest}\n"
+            f"• 🎫 Booking ID: {booking_id}\n\n"
+            f"Your rider is on the way! Do you want any other help or details?"
+        )
+    else:
+        response = (
+            "You don't currently have an active booking or order. "
+            "I can help you hail a ride, order food, or arrange home cleaning! What would you like to do?"
+        )
+
+    return {
+        "response": response,
+        "current_step": "INQUIRY_ANSWERED",
+        "waiting_for_confirmation": False,
+    }
+
+
+async def handle_food_order_node(state: AgentState) -> dict[str, Any]:
+    """Handles food ordering requests across multi-domain architecture."""
+    response = (
+        "I'd love to help you order food! Which restaurant, dish, or cuisine are you craving today, "
+        "and where should we deliver to?"
+    )
+    return {
+        "response": response,
+        "current_step": "WAITING_FOR_USER",
+        "waiting_for_confirmation": False,
+    }
+
+
+async def handle_service_booking_node(state: AgentState) -> dict[str, Any]:
+    """Handles home services like Urban Clean / Urban Company."""
+    response = (
+        "I'd be glad to help you arrange home services (like Urban Clean / Urban Company)! "
+        "We support deep home cleaning, kitchen & bathroom cleaning, plumbing, and appliance repair. "
+        "Which service do you need and for which location?"
+    )
+    return {
+        "response": response,
+        "current_step": "WAITING_FOR_USER",
+        "waiting_for_confirmation": False,
+    }

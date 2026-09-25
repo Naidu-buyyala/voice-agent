@@ -12,6 +12,7 @@ class AgentState(TypedDict):
     # Current user turn
     user_message: str
     last_assistant_message: Optional[str]
+    latest_completed_task: Optional[dict[str, Any]]
 
     # Intent and Extraction
     intent: Optional[str]

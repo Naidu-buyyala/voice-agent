@@ -7,9 +7,25 @@ class AgentExtraction(BaseModel):
     Strict schema returned by Gemini for intent and entity understanding.
     LLM = Understand: extracts what user said, without taking actions.
     """
-    intent: Literal["BOOK_RIDE", "UNKNOWN"] = Field(
+    intent: Literal[
+        "BOOK_RIDE",
+        "ORDER_FOOD",
+        "BOOK_SERVICE",
+        "TASK_INQUIRY",
+        "GRATITUDE_OR_CLOSING",
+        "GREETING",
+        "GENERAL_SUPPORT",
+        "UNKNOWN",
+    ] = Field(
         default="UNKNOWN",
-        description="The primary user intent.",
+        description="The primary user intent: "
+                    "'BOOK_RIDE' (user wants to book/hail a ride, cab, bike, auto, parcel, or gives travel points), "
+                    "'ORDER_FOOD' (user wants to order food, meals, groceries), "
+                    "'BOOK_SERVICE' (home services like cleaning, urban clean, plumbing, repair), "
+                    "'TASK_INQUIRY' (inquiry about driver/vehicle status, phone number, ETA, booking details), "
+                    "'GRATITUDE_OR_CLOSING' (thanks, thank you, bye), "
+                    "'GREETING' (hi, hello, hey, good morning, greetings), "
+                    "'GENERAL_SUPPORT' (asking what apps/services are supported, help), or 'UNKNOWN'.",
     )
     pickup: Optional[str] = Field(
         default=None,

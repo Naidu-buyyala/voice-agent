@@ -25,6 +25,9 @@ class TaskService:
     async def get_active_task(self, conversation_id: str) -> Optional[TaskModel]:
         return await self.repository.get_active_by_conversation(conversation_id)
 
+    async def get_latest_task(self, conversation_id: str) -> Optional[TaskModel]:
+        return await self.repository.get_latest_by_conversation(conversation_id)
+
     async def get_task_by_id(self, task_id: str) -> Optional[TaskModel]:
         return await self.repository.get_by_id(task_id)
 

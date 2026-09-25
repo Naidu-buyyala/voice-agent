@@ -143,6 +143,26 @@ class GeminiExtractor:
             extraction.destination = extraction.pickup
             extraction.pickup = None
 
+        # Intent sanitization
+        lower = user_message.lower().strip()
+        words = lower.split()
+        if lower in ["hi", "hello", "hey", "hola", "sup", "yo", "greetings", "good morning", "good evening", "good afternoon", "hey there", "hi there"]:
+            extraction.intent = "GREETING"
+            extraction.pickup = None
+            extraction.destination = None
+        elif any(w in words for w in ["thanks", "thank", "thx", "cheers", "bye", "goodbye"]):
+            extraction.intent = "GRATITUDE_OR_CLOSING"
+            extraction.pickup = None
+            extraction.destination = None
+        elif any(w in lower for w in ["where is", "driver", "vehicle", "phone number", "phone", "contact", "eta", "how long", "status of ride", "booking id"]) and not any(w in lower for w in ["book", "take me", "from "]):
+            extraction.intent = "TASK_INQUIRY"
+            extraction.pickup = None
+            extraction.destination = None
+        elif any(w in lower for w in ["food", "order food", "burger", "pizza", "biryani", "swiggy", "zomato", "groceries"]):
+            extraction.intent = "ORDER_FOOD"
+        elif any(w in lower for w in ["clean", "cleaning", "urbanclean", "urban clean", "urban company", "plumber", "repair", "maid", "electrician"]):
+            extraction.intent = "BOOK_SERVICE"
+
         # Check broad locality
         is_broad_p, prompt_p = self.is_broad_locality_only(extraction.pickup)
         is_broad_d, prompt_d = self.is_broad_locality_only(extraction.destination)
@@ -264,7 +284,18 @@ class GeminiExtractor:
 
         # Intent detection
         intent = "UNKNOWN"
-        if any(w in lower for w in ["ride", "uber", "cab", "taxi", "go to", "from", "to", "book", "bike", "auto", "parcel"]):
+        words = lower.split()
+        if lower in ["hi", "hello", "hey", "hola", "sup", "yo", "greetings", "good morning", "good evening", "good afternoon", "hey there", "hi there"]:
+            intent = "GREETING"
+        elif any(w in words for w in ["thanks", "thank", "thx", "cheers", "bye", "goodbye"]):
+            intent = "GRATITUDE_OR_CLOSING"
+        elif any(w in lower for w in ["where is", "driver", "vehicle", "phone number", "phone", "contact", "eta", "how long", "status of ride", "booking id"]) and not any(w in lower for w in ["book", "take me", "from "]):
+            intent = "TASK_INQUIRY"
+        elif any(w in lower for w in ["food", "order food", "burger", "pizza", "biryani", "swiggy", "zomato", "groceries"]):
+            intent = "ORDER_FOOD"
+        elif any(w in lower for w in ["clean", "cleaning", "urbanclean", "urban clean", "urban company", "plumber", "repair", "maid", "electrician"]):
+            intent = "BOOK_SERVICE"
+        elif any(w in lower for w in ["ride", "uber", "cab", "taxi", "go to", "from", "to", "book", "bike", "auto", "parcel"]):
             intent = "BOOK_RIDE"
         elif current_collected:  # Continue existing task
             intent = "BOOK_RIDE"

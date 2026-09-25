@@ -208,3 +208,153 @@ async def test_graph_multiturn_bike_flow():
     assert t4_final["collected_data"].get("fare_amount") == 120.0
     assert "120" in t4_final["response"]
 
+
+@pytest.mark.asyncio
+async def test_graph_greeting_shows_universal_actions():
+    initial_state: AgentState = {
+        "conversation_id": "conv_hi",
+        "task_id": None,
+        "user_message": "hi",
+        "last_assistant_message": None,
+        "latest_completed_task": None,
+        "intent": None,
+        "collected_data": {},
+        "missing_fields": [],
+        "current_step": "START",
+        "waiting_for_confirmation": False,
+        "confirmation_received": None,
+        "tool_name": None,
+        "tool_input": None,
+        "tool_result": None,
+        "response": None,
+        "error": None,
+    }
+
+    final_state = await agent_graph.ainvoke(initial_state)
+
+    assert final_state["current_step"] == "GREETING_ANSWERED"
+    # Does NOT ask where to pick up!
+    assert "where can i pick you up" not in final_state["response"].lower()
+    # Mentions universal action capabilities
+    assert any(w in final_state["response"].lower() for w in ["ride", "food", "clean", "assistant"])
+
+
+@pytest.mark.asyncio
+async def test_graph_post_booking_gratitude_and_driver_inquiry():
+    completed_task = {
+        "id": "task_booked_123",
+        "type": "BOOK_RIDE",
+        "status": "COMPLETED",
+        "collected_data": {
+            "pickup": "ram nivas, Gachibowli",
+            "destination": "Airport",
+            "ride_type": "Uber Auto",
+            "fare_amount": 220.0,
+        },
+        "result": {
+            "booking_id": "mock_booking_f7a320c7",
+            "driver_name": "Rajesh K.",
+            "vehicle_plate": "TS 09 UB 1234",
+            "driver_phone": "+91 98765 43210",
+        },
+    }
+
+    # 1. User says "thanks" after booking
+    thanks_state: AgentState = {
+        "conversation_id": "conv_post",
+        "task_id": None,
+        "user_message": "thanks",
+        "last_assistant_message": "All set! Your Uber Auto has been booked successfully.",
+        "latest_completed_task": completed_task,
+        "intent": None,
+        "collected_data": {},
+        "missing_fields": [],
+        "current_step": "START",
+        "waiting_for_confirmation": False,
+        "confirmation_received": None,
+        "tool_name": None,
+        "tool_input": None,
+        "tool_result": None,
+        "response": None,
+        "error": None,
+    }
+    thanks_final = await agent_graph.ainvoke(thanks_state)
+    assert thanks_final["current_step"] == "GRATITUDE_ACKNOWLEDGED"
+    assert "Rajesh K." in thanks_final["response"]
+    assert "on the way" in thanks_final["response"].lower()
+    assert "where can i pick you up" not in thanks_final["response"].lower()
+
+    # 2. User asks "where is the vehicle?" or "driver phone number"
+    inquiry_state: AgentState = {
+        "conversation_id": "conv_post",
+        "task_id": None,
+        "user_message": "where is the vehicle and what is the driver phone number?",
+        "last_assistant_message": thanks_final["response"],
+        "latest_completed_task": completed_task,
+        "intent": None,
+        "collected_data": {},
+        "missing_fields": [],
+        "current_step": "START",
+        "waiting_for_confirmation": False,
+        "confirmation_received": None,
+        "tool_name": None,
+        "tool_input": None,
+        "tool_result": None,
+        "response": None,
+        "error": None,
+    }
+    inquiry_final = await agent_graph.ainvoke(inquiry_state)
+    assert inquiry_final["current_step"] == "INQUIRY_ANSWERED"
+    assert "Rajesh K." in inquiry_final["response"]
+    assert "TS 09 UB 1234" in inquiry_final["response"]
+    assert "+91 98765 43210" in inquiry_final["response"]
+    assert "mock_booking_f7a320c7" in inquiry_final["response"]
+    assert "on the way" in inquiry_final["response"].lower()
+
+
+@pytest.mark.asyncio
+async def test_graph_food_order_and_service_booking():
+    # User asks for food order
+    food_state: AgentState = {
+        "conversation_id": "conv_food",
+        "task_id": None,
+        "user_message": "Order food",
+        "last_assistant_message": None,
+        "latest_completed_task": None,
+        "intent": None,
+        "collected_data": {},
+        "missing_fields": [],
+        "current_step": "START",
+        "waiting_for_confirmation": False,
+        "confirmation_received": None,
+        "tool_name": None,
+        "tool_input": None,
+        "tool_result": None,
+        "response": None,
+        "error": None,
+    }
+    food_final = await agent_graph.ainvoke(food_state)
+    assert "food" in food_final["response"].lower() or "restaurant" in food_final["response"].lower()
+
+    # User asks for cleaning service
+    service_state: AgentState = {
+        "conversation_id": "conv_service",
+        "task_id": None,
+        "user_message": "Book Urban Clean",
+        "last_assistant_message": None,
+        "latest_completed_task": None,
+        "intent": None,
+        "collected_data": {},
+        "missing_fields": [],
+        "current_step": "START",
+        "waiting_for_confirmation": False,
+        "confirmation_received": None,
+        "tool_name": None,
+        "tool_input": None,
+        "tool_result": None,
+        "response": None,
+        "error": None,
+    }
+    service_final = await agent_graph.ainvoke(service_state)
+    assert "clean" in service_final["response"].lower()
+

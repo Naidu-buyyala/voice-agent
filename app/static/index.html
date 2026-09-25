@@ -314,32 +314,31 @@
     <div class="chat-container">
         <div class="chat-header">
             <div class="header-info">
-                <h1>Universal AI Ride Assistant</h1>
-                <p>Natural conversation powered by LangGraph, Gemini & Controlled Tools</p>
+                <h1>Universal AI Action Agent</h1>
+                <p>Multi-domain assistant for rides, food delivery, home services & task inquiries</p>
             </div>
         </div>
 
         <div class="chat-messages" id="messages-box">
             <div class="message-bubble message-agent">
-                👋 Hello! Where would you like to travel today? Just type naturally, like <i>"Take me from Gachibowli to the Airport"</i> or <i>"Book an Uber"</i>.
+                👋 Hello! I am your Universal AI Action Assistant. I can help you hail rides (cabs, bikes, autos, parcel delivery), order food, book home services (like Urban Clean), or track active bookings. How can I help you today?
             </div>
         </div>
 
         <!-- Quick suggestion chips -->
         <div class="quick-chips">
-            <div class="chip" onclick="fillInput('Take me from Gachibowli to Airport')">Gachibowli to Airport</div>
-            <div class="chip" onclick="fillInput('IKEA')">IKEA, Gachibowli</div>
-            <div class="chip" onclick="fillInput('DLF Cyber City')">DLF Cyber City</div>
-            <div class="chip" onclick="fillInput('Book a Cab')">🚗 Cab (Uber Go)</div>
-            <div class="chip" onclick="fillInput('Book a Bike')">🏍️ Bike (Uber Moto)</div>
-            <div class="chip" onclick="fillInput('Book an Auto')">🛺 Auto (Uber Auto)</div>
-            <div class="chip" onclick="fillInput('Send Parcel')">📦 Parcel (Uber Connect)</div>
+            <div class="chip" onclick="fillInput('Take me from Gachibowli to Airport')">🚗 Gachibowli to Airport</div>
+            <div class="chip" onclick="fillInput('Book a Bike')">🏍️ Book a Bike</div>
+            <div class="chip" onclick="fillInput('Order Food')">🍔 Order Food</div>
+            <div class="chip" onclick="fillInput('Book Urban Clean')">🧹 Book Urban Clean</div>
+            <div class="chip" onclick="fillInput('Where is my driver?')">📍 Where is my driver?</div>
+            <div class="chip" onclick="fillInput('Driver phone number')">📞 Driver Phone</div>
             <div class="chip" onclick="fillInput('Yes, proceed')">Yes, proceed</div>
             <div class="chip" onclick="fillInput('Cancel')">Cancel</div>
         </div>
 
         <div class="chat-input-wrapper">
-            <input type="text" id="user-input" class="chat-input" placeholder="Type your message naturally..." autofocus autocomplete="off" />
+            <input type="text" id="user-input" class="chat-input" placeholder="Type naturally: 'hi', 'book a bike', 'order food', 'where is my vehicle?'..." autofocus autocomplete="off" />
             <button class="btn-send" id="btn-send">Send</button>
         </div>
     </div>
@@ -449,7 +448,7 @@
 
         btnNewSession.addEventListener('click', () => {
             messagesBox.innerHTML = '';
-            appendMessage('👋 New conversation started. Where would you like to travel?', false);
+            appendMessage('👋 Hello! How can I help you today? You can hail a ride, order food, or book home services.', false);
             taskStateEl.textContent = 'INITIAL';
             taskStateEl.style.background = '#3b82f6';
             dataPickupEl.textContent = '—';
