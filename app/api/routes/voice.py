@@ -79,6 +79,12 @@ async def process_voice_audio(
     response_model=VoiceTurnResponse,
     summary="Process multilingual text turn through translation, existing backend, and Bulbul TTS",
 )
+@router.post(
+    "/conversations/{conversation_id}/text",
+    response_model=VoiceTurnResponse,
+    summary="Alias for text turn",
+    include_in_schema=False,
+)
 async def process_multilingual_text_turn(
     conversation_id: str,
     req: VoiceTurnRequest,

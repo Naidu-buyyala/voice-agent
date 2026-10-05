@@ -3,25 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal AI Action Agent — Sarvam Voice Assistant</title>
+    <title>ONEVO.AI — Universal AI Action Assistant for Families</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --surface-color: #111827;
-            --surface-border: #1f2937;
-            --primary-color: #2563eb;
-            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            --voice-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-            --recording-gradient: linear-gradient(135deg, #ef4444 0%, #f97316 100%);
-            --accent-green: #10b981;
-            --accent-purple: #8b5cf6;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
-            --user-bubble: #1e3a8a;
-            --agent-bubble: #1f2937;
+            --brand-primary: #4F46E5;
+            --brand-primary-hover: #4338CA;
+            --brand-indigo-light: #EEF2FF;
+            --brand-purple: #6366F1;
+            --brand-purple-dark: #312E81;
+            --bg-canvas: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --text-navy: #0F172A;
+            --text-slate: #334155;
+            --text-muted: #64748B;
+            --text-subtle: #94A3B8;
+            --border-light: #E2E8F0;
+            --border-subtle: #F1F5F9;
+            --success-green: #10B981;
+            --success-bg: #ECFDF5;
+            --warning-amber: #F59E0B;
+            --warning-bg: #FFFBEB;
+            --danger-red: #EF4444;
+            --danger-bg: #FEF2F2;
+            --shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+            --shadow-card: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+            --shadow-hover: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+            --shadow-hud: 0 12px 35px -5px rgba(79, 70, 229, 0.18), 0 6px 15px -3px rgba(15, 23, 42, 0.08);
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+            --sidebar-width: 260px;
         }
 
         * {
@@ -31,708 +46,3346 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-navy);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* App Layout */
+        .app-container {
             display: flex;
             height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 70px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 30;
+            width: 100%;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Brand Logo */
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo-symbol {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            color: #FFFFFF;
+        }
+
+        .logo-text-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 19px;
+            letter-spacing: -0.5px;
+            color: var(--text-navy);
+            display: flex;
+            align-items: center;
+        }
+
+        .brand-title span {
+            color: var(--brand-primary);
+        }
+
+        .service-dropdown-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-slate);
+            background: #F1F5F9;
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .service-dropdown-pill:hover {
+            background: #E2E8F0;
+        }
+
+        .family-pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            padding: 6px 14px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            color: var(--text-slate);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .family-pill:hover {
+            border-color: var(--brand-primary);
+            background: #FFFFFF;
+        }
+
+        .family-pill-icon {
+            color: var(--brand-primary);
+            font-size: 15px;
+        }
+
+        .family-pill-text {
+            font-weight: 700;
+            color: var(--text-navy);
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-light);
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: var(--text-slate);
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: #F8FAFC;
+            color: var(--text-navy);
+        }
+
+        .notification-dot {
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+            position: absolute;
+            top: 7px;
+            right: 8px;
+            border: 2px solid #FFFFFF;
+        }
+
+        .user-profile-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-full);
+            transition: all 0.2s;
+        }
+
+        .user-profile-badge:hover {
+            background: #F1F5F9;
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #4F46E5;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-navy);
+        }
+
+        .user-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .share-btn {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .share-btn:hover {
+            background: var(--brand-primary-hover);
+        }
+
+        /* Main Workspace Frame */
+        .workspace-frame {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
             overflow: hidden;
         }
 
         /* Sidebar */
         .sidebar {
-            width: 330px;
-            background: var(--surface-color);
-            border-right: 1px solid var(--surface-border);
+            width: var(--sidebar-width);
+            background: #FFFFFF;
+            border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            padding: 24px;
-            gap: 20px;
+            justify-content: space-between;
+            padding: 24px 16px;
+            z-index: 20;
+            overflow-y: auto;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-badge {
-            background: var(--voice-gradient);
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
-        }
-
-        .brand-title {
-            font-size: 18px;
+        .sidebar-section-title {
+            font-size: 11px;
             font-weight: 700;
-            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-subtle);
+            margin-bottom: 12px;
+            padding-left: 12px;
         }
 
-        .badge-status {
-            font-size: 11px;
-            font-weight: 600;
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            padding: 2px 8px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 2px;
-        }
-
-        .voice-mode-badge {
-            font-size: 11px;
-            font-weight: 600;
-            background: rgba(139, 92, 246, 0.2);
-            color: #a78bfa;
-            padding: 4px 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(139, 92, 246, 0.3);
+        .nav-list {
+            list-style: none;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 6px;
         }
 
-        .btn-new-chat {
-            background: transparent;
-            border: 1px dashed #3b82f6;
-            color: #60a5fa;
-            border-radius: 8px;
-            padding: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-
-        .btn-new-chat:hover {
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .task-card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            padding: 16px;
+        .nav-item {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .task-card-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .task-state-badge {
-            display: inline-block;
-            background: #3b82f6;
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-        }
-
-        .data-row span:first-child {
-            color: var(--text-muted);
-        }
-
-        /* Main Chat Window */
-        .chat-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: radial-gradient(circle at 50% 0%, #172554 0%, #0b0f19 75%);
-            position: relative;
-        }
-
-        .chat-header {
-            padding: 20px 32px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .header-info h1 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .header-info p {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .message-bubble {
-            max-width: 650px;
-            padding: 14px 18px;
-            border-radius: 14px;
-            font-size: 15px;
-            line-height: 1.5;
-            word-wrap: break-word;
-            animation: fadeIn 0.25s ease-out;
-            position: relative;
-        }
-
-        .message-agent {
-            align-self: flex-start;
-            background: var(--agent-bubble);
-            border: 1px solid var(--surface-border);
-            color: #f3f4f6;
-            border-bottom-left-radius: 4px;
-        }
-
-        .message-user {
-            align-self: flex-end;
-            background: var(--primary-gradient);
-            color: #ffffff;
-            border-bottom-right-radius: 4px;
-        }
-
-        .translation-subtext {
-            font-size: 12px;
-            color: #93c5fd;
-            margin-top: 6px;
-            font-style: italic;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 4px;
-        }
-
-        .audio-replay-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 6px;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-slate);
             cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: #F8FAFC;
+            color: var(--text-navy);
+        }
+
+        .nav-item.active {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.22);
+        }
+
+        .nav-item.active svg {
+            stroke: #FFFFFF;
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 24/7 Support Card on Sidebar Bottom */
+        .support-card {
+            background: #0F172A;
+            color: #FFFFFF;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 10px 20px -3px rgba(15, 23, 42, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .support-card-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .support-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .support-card p {
             font-size: 12px;
+            color: #94A3B8;
+            line-height: 1.4;
+            margin-bottom: 14px;
+        }
+
+        .support-card-link {
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            margin-top: 6px;
-            transition: background 0.2s;
+            cursor: pointer;
         }
 
-        .audio-replay-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .support-card-link:hover {
+            text-decoration: underline;
         }
 
-        /* Voice Live Status Bar */
-        .voice-status-bar {
-            padding: 8px 32px;
-            background: rgba(236, 72, 153, 0.1);
-            border-top: 1px solid rgba(236, 72, 153, 0.2);
-            color: #f472b6;
-            font-size: 13px;
-            font-weight: 500;
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 36px 140px 36px;
+            position: relative;
+        }
+
+        /* View Containers */
+        .view-pane {
             display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .view-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Greeting Section */
+        .greeting-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-date {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6366F1;
+            margin-bottom: 4px;
+        }
+
+        .header-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-navy);
+            letter-spacing: -0.6px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .view-all-link {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            text-decoration: none;
+            display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
         }
 
-        .recording-pulse {
-            width: 10px;
-            height: 10px;
-            background-color: #ef4444;
+        .view-all-link:hover {
+            transform: translateX(2px);
+        }
+
+        /* Top Grid - Wallet Card & Ride in Progress */
+        .dashboard-hero-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        /* Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 25px -4px rgba(79, 70, 229, 0.35);
+            position: relative;
+            overflow: hidden;
+            min-height: 190px;
+        }
+
+        .wallet-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wallet-label {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .wallet-chip-icon {
+            width: 32px;
+            height: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .wallet-chip-icon::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .wallet-balance-amount {
+            font-size: 34px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 14px 0 18px 0;
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+
+        .wallet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            padding-top: 14px;
+        }
+
+        .auto-topup-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auto-topup-title {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            opacity: 0.85;
+        }
+
+        .auto-topup-sub {
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        .pill-toggle {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pill-toggle:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Ride in Progress Card */
+        .active-service-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            padding: 24px 28px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 190px;
+            position: relative;
+        }
+
+        .service-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .service-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: #059669;
+        }
+
+        .pulsing-dot {
+            width: 8px;
+            height: 8px;
+            background: #10B981;
             border-radius: 50%;
-            animation: pulse-red 1.2s infinite;
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseGreen 2s infinite;
         }
 
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1.15); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        @keyframes pulseGreen {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 7px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
         }
 
-        /* Input Area */
-        .chat-input-wrapper {
-            padding: 16px 32px 24px 32px;
-            background: var(--surface-color);
-            border-top: 1px solid var(--surface-border);
+        .eta-pill {
+            text-align: right;
+        }
+
+        .eta-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-subtle);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .eta-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--brand-primary);
+        }
+
+        .ride-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-navy);
+            margin-top: 4px;
+        }
+
+        .ride-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Route Visualizer */
+        .route-track-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 10px 0 16px 0;
+            width: 100%;
+        }
+
+        .route-node {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-navy);
+            white-space: nowrap;
+        }
+
+        .node-icon-pill {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .node-home {
+            background: #EEF2FF;
+            color: #4F46E5;
+        }
+
+        .node-dest {
+            background: #FEE2E2;
+            color: #EF4444;
+        }
+
+        .route-path-line {
+            flex: 1;
+            height: 3px;
+            background: #E2E8F0;
+            border-radius: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .route-progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #10B981 0%, #4F46E5 100%);
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        .route-moving-car {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            background: #0F172A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            transition: left 0.6s ease;
+        }
+
+        .service-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-light);
+            padding-top: 12px;
+            font-size: 13px;
+        }
+
+        .driver-meta {
+            color: var(--text-slate);
+            font-weight: 500;
+        }
+
+        .driver-meta strong {
+            color: var(--text-navy);
+        }
+
+        .track-live-btn {
+            font-weight: 700;
+            color: var(--brand-primary);
+            text-decoration: none;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .track-live-btn:hover {
+            background: #EEF2FF;
+        }
+
+        /* Section Layouts */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-navy);
+        }
+
+        /* Saved Locations Cards */
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .location-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: var(--shadow-subtle);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .location-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: #CBD5E1;
+        }
+
+        .location-icon-wrap {
+            font-size: 22px;
+            background: #F8FAFC;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .location-details h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-navy);
+            margin-bottom: 2px;
+        }
+
+        .location-details p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .location-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            background: #EEF2FF;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            margin-top: 6px;
+        }
+
+        /* Frequent Location Banner */
+        .frequent-banner {
+            background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%);
+            border: 1px solid #C7D2FE;
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            gap: 16px;
+        }
+
+        .frequent-banner-text {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .btn-mic {
-            background: var(--voice-gradient);
+        .frequent-banner-text strong {
+            color: var(--brand-purple-dark);
+            font-size: 14px;
+        }
+
+        .frequent-banner-text p {
+            color: var(--text-slate);
+            font-size: 13px;
+        }
+
+        .frequent-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-banner-save {
+            background: var(--brand-primary);
+            color: #FFFFFF;
             border: none;
-            color: #fff;
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-banner-save:hover {
+            background: var(--brand-primary-hover);
+        }
+
+        .btn-banner-dismiss {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid #CBD5E1;
+            padding: 8px 14px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Services Grid (Informational & Voice trigger) */
+        .service-category-block {
+            margin-bottom: 28px;
+        }
+
+        .category-header {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-subtle);
+            margin-bottom: 12px;
+        }
+
+        .services-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 14px;
+        }
+
+        .service-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 8px 20px -2px rgba(79, 70, 229, 0.12);
+        }
+
+        .service-icon-box {
+            font-size: 30px;
+            margin-bottom: 10px;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            background: #F8FAFC;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            cursor: pointer;
-            box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
+        }
+
+        .service-card h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-navy);
+            margin-bottom: 2px;
+        }
+
+        .service-card p {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .service-badge-prompt {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            background: #EEF2FF;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Family View Styles (Matching Screenshot 2) */
+        .family-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 26px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-subtle);
+            margin-bottom: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-navy);
+        }
+
+        .family-members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .member-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            padding: 22px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 180px;
             transition: all 0.2s;
+        }
+
+        .member-card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .member-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .member-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 15px;
+            color: #FFFFFF;
             flex-shrink: 0;
         }
 
-        .btn-mic:hover {
+        .member-meta {
+            flex: 1;
+        }
+
+        .member-name-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .member-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-navy);
+        }
+
+        .role-pill-badge {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: var(--radius-full);
+            background: #F1F5F9;
+            color: var(--text-slate);
+        }
+
+        .role-pill-primary {
+            background: #EEF2FF;
+            color: #4F46E5;
+        }
+
+        .role-pill-admin {
+            background: #FDF2F8;
+            color: #DB2777;
+        }
+
+        .role-pill-child {
+            background: #F0F9FF;
+            color: #0284C7;
+        }
+
+        .role-pill-senior {
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        .member-relation {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .member-card-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 16px 0;
+            padding: 12px 0;
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .member-field-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-subtle);
+            margin-bottom: 2px;
+        }
+
+        .member-field-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-slate);
+        }
+
+        .member-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            color: #059669;
+        }
+
+        .connection-dot {
+            width: 6px;
+            height: 6px;
+            background: #10B981;
+            border-radius: 50%;
+        }
+
+        .member-action-btn {
+            background: none;
+            border: none;
+            color: var(--brand-primary);
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .member-action-btn:hover {
+            background: #EEF2FF;
+        }
+
+        /* History View */
+        .history-timeline-group {
+            margin-bottom: 28px;
+        }
+
+        .timeline-date-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-subtle);
+            margin-bottom: 12px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .history-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+        }
+
+        .history-card:hover {
+            transform: translateX(3px);
+            border-color: var(--brand-primary);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .history-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .history-icon-circle {
+            width: 44px;
+            height: 44px;
+            background: #F8FAFC;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .history-meta h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-navy);
+            margin-bottom: 3px;
+        }
+
+        .history-meta p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .history-meta span.member-tag {
+            font-weight: 600;
+            color: var(--text-slate);
+        }
+
+        .history-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .history-amount {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-navy);
+            font-feature-settings: "tnum";
+        }
+
+        .history-status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        /* Support View */
+        .support-options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+            margin-top: 18px;
+        }
+
+        .support-option-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            cursor: pointer;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .support-option-card:hover {
+            border-color: var(--brand-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .support-card-badge {
+            width: 40px;
+            height: 40px;
+            background: #EEF2FF;
+            color: #4F46E5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+
+        .support-option-card h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-navy);
+            margin-bottom: 6px;
+        }
+
+        .support-option-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Detail Drawer (Slide-out) */
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .drawer-overlay.open {
+            display: block;
+            opacity: 1;
+        }
+
+        .slide-drawer {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 440px;
+            max-width: 90vw;
+            height: 100vh;
+            background: #FFFFFF;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+            z-index: 101;
+            transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 32px 28px;
+            overflow-y: auto;
+        }
+
+        .slide-drawer.open {
+            right: 0;
+        }
+
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .drawer-close-btn {
+            background: #F1F5F9;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--text-slate);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .detail-value {
+            color: var(--text-navy);
+            font-weight: 700;
+            text-align: right;
+            max-width: 60%;
+        }
+
+        /* ------------------------------------------------------------- */
+        /* GLOBAL VOICE ASSISTANT HUD (Persistent Floating Bar) */
+        /* ------------------------------------------------------------- */
+        .voice-hud-container {
+            position: fixed;
+            bottom: 24px;
+            left: calc(var(--sidebar-width) + (100vw - var(--sidebar-width)) / 2);
+            transform: translateX(-50%);
+            z-index: 80;
+            width: 640px;
+            max-width: calc(100vw - 320px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .voice-hud-bar {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 8px 12px 8px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-hud);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+        }
+
+        .voice-hud-bar:hover {
+            box-shadow: 0 16px 40px -4px rgba(79, 70, 229, 0.25);
+            border-color: #C7D2FE;
+        }
+
+        .voice-hud-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Animated Mic Button */
+        .voice-mic-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+            color: #FFFFFF;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .voice-mic-btn:hover {
             transform: scale(1.05);
         }
 
-        .btn-mic.recording {
-            background: var(--recording-gradient);
-            animation: pulse-red 1.2s infinite;
+        /* Voice Status States */
+        .voice-mic-btn.listening {
+            background: #EF4444;
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            animation: micPulse 1.5s infinite;
         }
 
-        .chat-input {
-            flex: 1;
-            background: #1f2937;
-            border: 1px solid #374151;
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            font-family: inherit;
-            transition: border-color 0.2s;
+        @keyframes micPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { transform: scale(1.08); box-shadow: 0 0 0 14px rgba(239, 68, 68, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .chat-input:focus {
-            border-color: #3b82f6;
+        .voice-mic-btn.processing {
+            background: #F59E0B;
         }
 
-        .btn-send {
-            background: var(--primary-gradient);
-            border: none;
-            color: #fff;
-            border-radius: 12px;
-            padding: 0 24px;
-            height: 48px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            flex-shrink: 0;
+        .voice-mic-btn.speaking {
+            background: #10B981;
         }
 
-        .btn-send:hover {
-            opacity: 0.9;
-        }
-
-        .quick-chips {
+        .voice-hud-texts {
             display: flex;
-            gap: 8px;
-            padding: 0 32px 12px 32px;
-            overflow-x: auto;
+            flex-direction: column;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .chip {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-muted);
+        .voice-hud-brand {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--brand-primary);
+        }
+
+        .voice-hud-prompt {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-navy);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .voice-hud-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .try-saying-pill {
+            background: #F1F5F9;
+            color: var(--text-slate);
+            font-size: 11px;
+            font-weight: 700;
             padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
+            border-radius: var(--radius-full);
             white-space: nowrap;
             transition: all 0.2s;
         }
 
-        .chip:hover {
-            background: rgba(59, 130, 246, 0.2);
-            color: #fff;
-            border-color: #3b82f6;
+        .try-saying-pill:hover {
+            background: #E2E8F0;
+            color: var(--brand-primary);
         }
 
-        .chip-lang {
-            border-color: rgba(236, 72, 153, 0.3);
-            color: #f472b6;
+        /* Expandable Voice Conversation Drawer/Panel */
+        .voice-conversation-panel {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 45px -8px rgba(15, 23, 42, 0.16);
+            margin-bottom: 12px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            max-height: 480px;
+            animation: slideUpFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .chip-lang:hover {
-            background: rgba(236, 72, 153, 0.2);
-            border-color: #ec4899;
-            color: #fff;
+        .voice-conversation-panel.open {
+            display: flex;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .panel-header {
+            padding: 14px 20px;
+            background: #F8FAFC;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-navy);
+        }
+
+        .lang-select {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border-light);
+            background: #FFFFFF;
+            color: var(--text-slate);
+            outline: none;
+        }
+
+        .panel-messages-wrap {
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            max-height: 280px;
+        }
+
+        .speech-bubble {
+            max-width: 82%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 13.5px;
+            line-height: 1.45;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .speech-user {
+            align-self: flex-end;
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .speech-assistant {
+            align-self: flex-start;
+            background: #F1F5F9;
+            color: var(--text-navy);
+            border-bottom-left-radius: 4px;
+        }
+
+        .bubble-label {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        .assistant-audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .replay-audio-btn {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Demo Quick Action Chips */
+        .demo-chips-bar {
+            padding: 10px 16px;
+            background: #F8FAFC;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .demo-chip {
+            background: #FFFFFF;
+            border: 1px solid var(--border-light);
+            padding: 5px 12px;
+            border-radius: var(--radius-full);
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--text-slate);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .demo-chip:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background: #EEF2FF;
+        }
+
+        .panel-input-bar {
+            padding: 12px 16px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .text-voice-input {
+            flex: 1;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 10px 16px;
+            font-size: 13px;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .text-voice-input:focus {
+            border-color: var(--brand-primary);
+        }
+
+        .send-turn-btn {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .send-turn-btn:hover {
+            background: var(--brand-primary-hover);
+        }
+
+        /* ------------------------------------------------------------- */
+        /* ONBOARDING MODAL FLOW */
+        /* ------------------------------------------------------------- */
+        .onboarding-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .onboarding-backdrop.open {
+            display: flex;
+        }
+
+        .onboarding-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-xl);
+            width: 440px;
+            max-width: 100%;
+            padding: 36px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+            text-align: center;
+            position: relative;
+            animation: popIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .onboarding-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+            border-radius: 18px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+        }
+
+        .onboarding-card h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-navy);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .onboarding-card p.subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-slate);
+            margin-bottom: 6px;
+        }
+
+        .phone-input-wrap {
+            display: flex;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #FFFFFF;
+        }
+
+        .country-code-select {
+            padding: 12px 14px;
+            background: #F8FAFC;
+            border: none;
+            border-right: 1px solid var(--border-light);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-navy);
+            outline: none;
+        }
+
+        .phone-text-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            font-size: 15px;
+            outline: none;
+            letter-spacing: 0.5px;
+        }
+
+        .otp-inputs-grid {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .otp-digit {
+            width: 46px;
+            height: 52px;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--brand-primary);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .otp-digit:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        .primary-action-btn {
+            width: 100%;
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        }
+
+        .primary-action-btn:hover {
+            background: var(--brand-primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .secondary-link-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 14px;
+            cursor: pointer;
+        }
+
+        .secondary-link-btn:hover {
+            color: var(--text-navy);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .toast-pill {
+            background: #0F172A;
+            color: #FFFFFF;
+            padding: 12px 20px;
+            border-radius: var(--radius-full);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInRight 0.3s ease;
+            pointer-events: auto;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Responsive Mobile Styles */
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            .dashboard-hero-grid {
+                grid-template-columns: 1fr;
+            }
+            .voice-hud-container {
+                left: 50%;
+                width: 92vw;
+                max-width: 92vw;
+            }
+            .content-area {
+                padding: 20px 16px 140px 16px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="brand">
-            <div class="brand-badge">🎙️</div>
-            <div>
-                <div class="brand-title">Sarvam Voice Agent</div>
-                <span class="badge-status">Universal Action Brain</span>
-            </div>
-        </div>
 
-        <div class="voice-mode-badge">
-            <span>🗣️</span>
-            <span id="detected-lang-badge">Lang: Auto-Detect (te, hi, en...)</span>
-        </div>
+    <!-- Onboarding Backdrop / Modal Flow -->
+    <div id="onboardingBackdrop" class="onboarding-backdrop">
+        <div class="onboarding-card">
+            <!-- Screen 1: Welcome -->
+            <div id="onboardScreen1">
+                <div class="onboarding-logo">
+                    <!-- ONEVO SVG Logo Concept: O with joined hands and mic -->
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="42" stroke="white" stroke-width="7"/>
+                        <!-- Voice Mic Upper Inner -->
+                        <rect x="44" y="24" width="12" height="20" rx="6" fill="white"/>
+                        <path d="M38 36C38 42.6274 43.3726 48 50 48C56.6274 48 62 42.6274 62 36" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="50" y1="48" x2="50" y2="56" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <!-- Joined Hands Lower Inner -->
+                        <path d="M32 70C36 66 42 64 47 67L53 67C58 64 64 66 68 70" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="44" cy="68" r="3" fill="white"/>
+                        <circle cx="56" cy="68" r="3" fill="white"/>
+                    </svg>
+                </div>
+                <h2>ONEVO.AI</h2>
+                <p class="subtitle"><strong>One voice. Everything your family needs.</strong><br>Book rides, travel, food, services and more — simply by talking to Onevo.</p>
+                <button class="primary-action-btn" onclick="showOnboardScreen(2)">Get Started</button>
+            </div>
 
-        <button class="btn-new-chat" id="btn-new-session">+ New Conversation</button>
+            <!-- Screen 2: Phone Input -->
+            <div id="onboardScreen2" style="display:none;">
+                <h2>Let's get you started</h2>
+                <p class="subtitle">Enter your mobile number to connect your family account</p>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <div class="phone-input-wrap">
+                        <select class="country-code-select">
+                            <option value="+91">🇮🇳 +91 (India)</option>
+                        </select>
+                        <input type="tel" id="onboardPhone" class="phone-text-input" placeholder="98765 43210" value="9876543210">
+                    </div>
+                </div>
+                <button class="primary-action-btn" onclick="sendMockOTP()">Send OTP</button>
+                <button class="secondary-link-btn" onclick="showOnboardScreen(1)">Back</button>
+            </div>
 
-        <div class="task-card">
-            <div class="task-card-title">Live Task Tracker</div>
-            <div>
-                <span class="task-state-badge" id="task-state">INITIAL</span>
+            <!-- Screen 3: OTP Verification -->
+            <div id="onboardScreen3" style="display:none;">
+                <h2>Verify your number</h2>
+                <p class="subtitle">Enter the 6-digit code sent to <span id="otpPhoneDisplay">+91 98765 43210</span></p>
+                <div class="otp-inputs-grid">
+                    <input type="text" maxlength="1" class="otp-digit" value="1">
+                    <input type="text" maxlength="1" class="otp-digit" value="2">
+                    <input type="text" maxlength="1" class="otp-digit" value="3">
+                    <input type="text" maxlength="1" class="otp-digit" value="4">
+                    <input type="text" maxlength="1" class="otp-digit" value="5">
+                    <input type="text" maxlength="1" class="otp-digit" value="6">
+                </div>
+                <button class="primary-action-btn" onclick="verifyOTPAndContinue()">Verify & Continue</button>
+                <button class="secondary-link-btn" onclick="showOnboardScreen(2)">Change Number</button>
             </div>
-            <div class="data-row">
-                <span>Route / Item:</span>
-                <span id="data-pickup" style="font-weight:600;">—</span>
+
+            <!-- Screen 4: Profile Setup -->
+            <div id="onboardScreen4" style="display:none;">
+                <h2>Create Your Onevo</h2>
+                <p class="subtitle">Set up your profile and household account</p>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="onboardName" class="phone-text-input" style="border:1px solid #E2E8F0; border-radius:12px; width:100%;" value="Rahul Sharma">
+                </div>
+                <div class="form-group">
+                    <label>Family Account Name</label>
+                    <input type="text" id="onboardFamily" class="phone-text-input" style="border:1px solid #E2E8F0; border-radius:12px; width:100%;" value="Sharma Household">
+                </div>
+                <button class="primary-action-btn" onclick="requestContextualPermissionAndFinish()">Create My Onevo</button>
             </div>
-            <div class="data-row">
-                <span>Destination / Loc:</span>
-                <span id="data-dest" style="font-weight:600;">—</span>
-            </div>
-            <div class="data-row">
-                <span>Service Type:</span>
-                <span id="data-service" style="color:#60a5fa;font-weight:600;">—</span>
-            </div>
-            <div class="data-row">
-                <span>Amount / Fare:</span>
-                <span id="data-fare" style="color:var(--accent-green);font-weight:600;">—</span>
-            </div>
-            <div class="data-row">
-                <span>Booking ID / PNR:</span>
-                <span id="data-booking" style="color:#38bdf8;font-family:monospace;font-size:11px;">—</span>
+
+            <!-- Screen 5: Just-in-Time Location Permission -->
+            <div id="onboardScreen5" style="display:none;">
+                <div style="font-size:44px; margin-bottom:12px;">📍</div>
+                <h2>Allow Location Access</h2>
+                <p class="subtitle">Onevo uses your location to find nearby services, cabs, and ensure fast, accurate pickup and delivery for your family.</p>
+                <button class="primary-action-btn" onclick="completeOnboarding()">Allow Location</button>
+                <button class="secondary-link-btn" onclick="completeOnboarding()">Not Now</button>
             </div>
         </div>
     </div>
 
-    <!-- Main Voice & Chat Area -->
-    <div class="chat-container">
-        <div class="chat-header">
-            <div class="header-info">
-                <h1>Universal AI Voice Action Assistant</h1>
-                <p>Speak naturally in Telugu, Hindi, Tamil, English, or mixed languages. Tap 🎙️ to speak!</p>
+    <!-- Main Application Shell -->
+    <div class="app-container">
+
+        <!-- Sidebar (Matching Screenshot 1 & 2) -->
+        <aside class="sidebar">
+            <div>
+                <div class="brand-logo" onclick="switchView('dashboard')" style="margin-bottom: 28px; padding-left: 12px;">
+                    <div class="logo-symbol">
+                        <!-- Custom ONEVO Logo SVG -->
+                        <svg width="24" height="24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="42" stroke="white" stroke-width="8"/>
+                            <rect x="44" y="24" width="12" height="20" rx="6" fill="white"/>
+                            <path d="M38 36C38 42.6 43.4 48 50 48C56.6 48 62 42.6 62 36" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <line x1="50" y1="48" x2="50" y2="56" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M32 70C36 66 42 64 47 67L53 67C58 64 64 66 68 70" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text-wrap">
+                        <span class="brand-title">ONEVO<span>.AI</span></span>
+                    </div>
+                </div>
+
+                <div class="sidebar-section-title">WORKSPACE</div>
+                <ul class="nav-list">
+                    <li>
+                        <a id="nav-dashboard" class="nav-item active" onclick="switchView('dashboard')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                            </span>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a id="nav-family" class="nav-item" onclick="switchView('family')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            </span>
+                            Family
+                        </a>
+                    </li>
+                    <li>
+                        <a id="nav-addresses" class="nav-item" onclick="switchView('addresses')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </span>
+                            Addresses
+                        </a>
+                    </li>
+                    <li>
+                        <a id="nav-services" class="nav-item" onclick="switchView('services')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                            </span>
+                            Services
+                        </a>
+                    </li>
+                    <li>
+                        <a id="nav-history" class="nav-item" onclick="switchView('history')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+                            </span>
+                            History
+                        </a>
+                    </li>
+                    <li>
+                        <a id="nav-support" class="nav-item" onclick="switchView('support')">
+                            <span class="nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                            </span>
+                            Support
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </div>
 
-        <div class="chat-messages" id="messages-box">
-            <div class="message-bubble message-agent">
-                How can I help you?
+            <!-- Bottom 24/7 Dark Support Card (Screenshot 1 & 2) -->
+            <div class="support-card">
+                <div class="support-card-icon">🎧</div>
+                <h4>Need a hand?</h4>
+                <p>Our support team is available 24/7.</p>
+                <a class="support-card-link" onclick="switchView('support')">Contact support →</a>
             </div>
-        </div>
+        </aside>
 
-        <!-- Live Voice Status Notice -->
-        <div class="voice-status-bar" id="voice-status-bar">
-            <div class="recording-pulse"></div>
-            <span id="voice-status-text">Listening... Speak now</span>
-        </div>
+        <!-- Right Workspace Frame -->
+        <div style="flex:1; display:flex; flex-direction:column; overflow:hidden;">
 
-        <!-- Multilingual Chips -->
-        <div class="quick-chips">
-            <div class="chip chip-lang" onclick="fillInput('నాకు క్యాబ్ కావాలి')">🇮🇳 Telugu: నాకు క్యాబ్ కావాలి</div>
-            <div class="chip chip-lang" onclick="fillInput('నాకు మణికొండ నుంచి గచ్చిబౌలికి క్యాబ్ బుక్ చేయాలి')">🇮🇳 Telugu: Manikonda to Gachibowli</div>
-            <div class="chip chip-lang" onclick="fillInput('నాకు బిర్యానీ ఆర్డర్ చేయాలి')">🇮🇳 Telugu: బిర్యానీ ఆర్డర్ చేయాలి</div>
-            <div class="chip chip-lang" onclick="fillInput('مجھے कैब बुक करनी है')">🇮🇳 Hindi: मुझे कैब बुक करनी है</div>
-            <div class="chip" onclick="fillInput('Book a bus from Hyderabad to Vizag')">🚌 Bus to Vizag</div>
-            <div class="chip" onclick="fillInput('Book a train from Secunderabad to Tirupati')">🚆 Train to Tirupati</div>
-            <div class="chip" onclick="fillInput('Where is my driver?')">📍 Where is my driver?</div>
-            <div class="chip" onclick="fillInput('Yes, confirm')">Yes, confirm</div>
-        </div>
+            <!-- Topbar (Screenshot 1 & 2) -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <div class="service-dropdown-pill">
+                        <span>Service Request Automation</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                </div>
 
-        <!-- Input Area with Microphone -->
-        <div class="chat-input-wrapper">
-            <button class="btn-mic" id="btn-mic" title="Tap to Speak (Sarvam Realtime Voice)">🎙️</button>
-            <input type="text" id="user-input" class="chat-input" placeholder="Speak via 🎙️ or type in Telugu, Hindi, or English..." autofocus autocomplete="off" />
-            <button class="btn-send" id="btn-send">Send</button>
+                <div class="topbar-center">
+                    <div class="family-pill" onclick="switchView('family')">
+                        <span class="family-pill-icon">👥</span>
+                        <span>ACTIVE FAMILY <strong id="topbarFamilyName" class="family-pill-text">Sharma Household</strong></span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="icon-btn" onclick="showToast('You have 2 family activity updates')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="notification-dot"></span>
+                    </button>
+
+                    <div class="user-profile-badge" onclick="confirmResetOrLogout()">
+                        <div id="topbarAvatar" class="avatar-circle">RS</div>
+                        <div class="user-info">
+                            <span id="topbarUserName" class="user-name">Rahul Sharma</span>
+                            <span class="user-sub">Family admin ▼</span>
+                        </div>
+                    </div>
+
+                    <button class="share-btn" onclick="showToast('Family link copied to clipboard!')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                        Share
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Scrollable Views Area -->
+            <main class="content-area">
+
+                <!-- 1. DASHBOARD VIEW (Screenshot 1) -->
+                <section id="view-dashboard" class="view-pane active">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">MONDAY, 26 MAY</div>
+                            <h1 id="greetingName" class="header-title">Good morning, Rahul</h1>
+                            <p class="header-subtitle">Your family is connected and everything looks good.</p>
+                        </div>
+                        <a class="view-all-link" onclick="switchView('history')">View all activity →</a>
+                    </div>
+
+                    <!-- Top 2 Main Cards: Wallet & Active Ride -->
+                    <div class="dashboard-hero-grid">
+
+                        <!-- Wallet Card -->
+                        <div class="wallet-card">
+                            <div class="wallet-card-header">
+                                <span class="wallet-label">WALLET BALANCE</span>
+                                <div class="wallet-chip-icon"></div>
+                            </div>
+                            <div id="heroWalletBalance" class="wallet-balance-amount">₹1,420.00</div>
+                            <div class="wallet-footer">
+                                <div class="auto-topup-info">
+                                    <span class="auto-topup-title">AUTO TOP-UP</span>
+                                    <span class="auto-topup-sub">₹500 min · ₹2,000 max</span>
+                                </div>
+                                <span class="pill-toggle" onclick="promptVoiceWalletTopup()">ON</span>
+                            </div>
+                        </div>
+
+                        <!-- Ride In Progress Card -->
+                        <div id="heroActiveRideCard" class="active-service-card">
+                            <div class="service-top-row">
+                                <div class="service-status-badge">
+                                    <span class="pulsing-dot"></span>
+                                    <span id="activeBadgeText">RIDE IN PROGRESS</span>
+                                </div>
+                                <div class="eta-pill">
+                                    <div class="eta-label">ARRIVING IN</div>
+                                    <div id="activeEtaVal" class="eta-value">8 min</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 id="activeRideTitle" class="ride-title">Mom is on the way</h3>
+                                <p id="activeRideSubtitle" class="ride-subtitle">Pooja Sharma · Swift Dzire · KA 01 AB 1234</p>
+                            </div>
+
+                            <!-- Visual Route Bar -->
+                            <div class="route-track-wrap">
+                                <div class="route-node">
+                                    <span class="node-icon-pill node-home">🏠</span>
+                                    <span id="activePickupText">My Home</span>
+                                </div>
+                                <div class="route-path-line">
+                                    <div id="activeProgressBar" class="route-progress-bar" style="width: 65%;"></div>
+                                    <div id="activeMovingCar" class="route-moving-car" style="left: 65%;">🚕</div>
+                                </div>
+                                <div class="route-node">
+                                    <span class="node-icon-pill node-dest">🏥</span>
+                                    <span id="activeDestText">Parents Hospital</span>
+                                </div>
+                            </div>
+
+                            <div class="service-footer-row">
+                                <div id="activeDriverMeta" class="driver-meta">
+                                    <strong>Suresh K.</strong> · 4.8 rating · Exact gate location
+                                </div>
+                                <a class="track-live-btn" onclick="stepLiveSimulation()">Track live</a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Frequent Address Detection Suggestion Banner -->
+                    <div id="frequentBanner" class="frequent-banner">
+                        <div class="frequent-banner-text">
+                            <span style="font-size: 24px;">📍</span>
+                            <div>
+                                <strong>You frequently visit Brother's House (Sector 2, HSR Layout).</strong>
+                                <p>Would you like to save it as a family address?</p>
+                            </div>
+                        </div>
+                        <div class="frequent-banner-actions">
+                            <button class="btn-banner-save" onclick="saveBrotherHomeAddress()">Save as Brother Home</button>
+                            <button class="btn-banner-dismiss" onclick="dismissFrequentBanner()">Dismiss</button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Saved Family Locations Section -->
+                    <div class="section-header">
+                        <h3 class="section-title">Saved Family Locations</h3>
+                        <a class="view-all-link" onclick="switchView('addresses')">Manage all →</a>
+                    </div>
+                    <div id="dashboardLocationsRow" class="locations-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <!-- Services Catalog Preview Section -->
+                    <div class="section-header" style="margin-top: 20px;">
+                        <h3 class="section-title">Supported Family Services</h3>
+                        <a class="view-all-link" onclick="switchView('services')">View catalog →</a>
+                    </div>
+                    <div class="services-row" style="margin-bottom: 24px;">
+                        <div class="service-card" onclick="triggerServiceVoice('Cab', 'Book a cab from home to airport')">
+                            <div class="service-icon-box">🚗</div>
+                            <h4>Cab</h4>
+                            <p>Fast family rides</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                        <div class="service-card" onclick="triggerServiceVoice('Bus', 'Book a bus from Hyderabad to Vizag')">
+                            <div class="service-icon-box">🚌</div>
+                            <h4>Bus</h4>
+                            <p>Intercity travel</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                        <div class="service-card" onclick="triggerServiceVoice('Train', 'Book a train from Hyderabad to Chennai')">
+                            <div class="service-icon-box">🚆</div>
+                            <h4>Train</h4>
+                            <p>IRCTC verified</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                        <div class="service-card" onclick="triggerServiceVoice('Flight', 'Book a flight from Hyderabad to Delhi')">
+                            <div class="service-icon-box">✈️</div>
+                            <h4>Flight</h4>
+                            <p>Domestic & international</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                        <div class="service-card" onclick="triggerServiceVoice('Food', 'Order chicken biryani to Manikonda')">
+                            <div class="service-icon-box">🍔</div>
+                            <h4>Food</h4>
+                            <p>Family dining</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                        <div class="service-card" onclick="triggerServiceVoice('Cleaning', 'Book deep home cleaning for Saturday')">
+                            <div class="service-icon-box">🧹</div>
+                            <h4>Home Cleaning</h4>
+                            <p>Trusted experts</p>
+                            <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- 2. FAMILY VIEW (Screenshot 2) -->
+                <section id="view-family" class="view-pane">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">FAMILY ACCOUNTS & ROLES</div>
+                            <h1 class="header-title">Sharma Household</h1>
+                            <p class="header-subtitle">Manage administrators, child accounts, and senior protections.</p>
+                        </div>
+                        <button class="share-btn" onclick="openAddMemberModal()">+ Add Family Member</button>
+                    </div>
+
+                    <!-- 3 Stats Cards Matching Screenshot 2 -->
+                    <div class="family-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">HOUSEHOLD SIZE</div>
+                            <div id="statHouseholdSize" class="stat-number">5 members</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">ADMINISTRATORS</div>
+                            <div id="statAdmins" class="stat-number">2</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">PROTECTED ACCOUNTS</div>
+                            <div id="statProtected" class="stat-number">3</div>
+                        </div>
+                    </div>
+
+                    <!-- 5 Member Cards Grid Matching Screenshot 2 -->
+                    <div id="familyMembersGrid" class="family-members-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- 3. ADDRESSES VIEW -->
+                <section id="view-addresses" class="view-pane">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">FAMILY ADDRESS BOOK</div>
+                            <h1 class="header-title">Saved Locations</h1>
+                            <p class="header-subtitle">Locations frequently used by your family for pick-ups, drops, and deliveries.</p>
+                        </div>
+                        <button class="share-btn" onclick="openAddAddressModal()">+ Add Address</button>
+                    </div>
+
+                    <div id="addressesFullGrid" class="locations-grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- 4. SERVICES VIEW (Informational only — No separate Book buttons!) -->
+                <section id="view-services" class="view-pane">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">ACTION ECOSYSTEM</div>
+                            <h1 class="header-title">All Supported Services</h1>
+                            <p class="header-subtitle">Select any category to speak with Onevo. No form-filling required.</p>
+                        </div>
+                    </div>
+
+                    <div class="service-category-block">
+                        <div class="category-header">🚗 TRANSPORT & MOBILITY</div>
+                        <div class="services-row">
+                            <div class="service-card" onclick="triggerServiceVoice('Cab', 'Book a cab from home to airport')">
+                                <div class="service-icon-box">🚗</div>
+                                <h4>Cab</h4>
+                                <p>Uber Go, Premier & XL</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Bike', 'Book a bike ride to Indiranagar')">
+                                <div class="service-icon-box">🏍️</div>
+                                <h4>Bike</h4>
+                                <p>Quick commute</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Auto', 'Book an auto from home to metro')">
+                                <div class="service-icon-box">🛺</div>
+                                <h4>Auto</h4>
+                                <p>Convenient local transit</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Bus', 'Book a bus from Hyderabad to Vizag')">
+                                <div class="service-icon-box">🚌</div>
+                                <h4>Bus</h4>
+                                <p>AC Sleeper & Seater</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Train', 'Book a train from Hyderabad to Chennai')">
+                                <div class="service-icon-box">🚆</div>
+                                <h4>Train</h4>
+                                <p>IRCTC verified tickets</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Flight', 'Book a flight from Hyderabad to Delhi')">
+                                <div class="service-icon-box">✈️</div>
+                                <h4>Flight</h4>
+                                <p>Domestic & international</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-category-block">
+                        <div class="category-header">🏨 TRAVEL & STAYS</div>
+                        <div class="services-row">
+                            <div class="service-card" onclick="triggerServiceVoice('Hotel', 'Book a hotel in Bangalore near Indiranagar')">
+                                <div class="service-icon-box">🏨</div>
+                                <h4>Hotel</h4>
+                                <p>Family stays & resorts</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-category-block">
+                        <div class="category-header">🍔 FOOD & GROCERY</div>
+                        <div class="services-row">
+                            <div class="service-card" onclick="triggerServiceVoice('Food', 'Order chicken biryani from Paradise')">
+                                <div class="service-icon-box">🍔</div>
+                                <h4>Food</h4>
+                                <p>Top restaurants nearby</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Grocery', 'Order milk, eggs and bread')">
+                                <div class="service-icon-box">🛒</div>
+                                <h4>Grocery</h4>
+                                <p>10-minute fresh delivery</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Parcel', 'Send a parcel from home to brother house')">
+                                <div class="service-icon-box">📦</div>
+                                <h4>Parcel</h4>
+                                <p>Intra-city package pickup</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-category-block">
+                        <div class="category-header">🧹 HOME SERVICES</div>
+                        <div class="services-row">
+                            <div class="service-card" onclick="triggerServiceVoice('Cleaning', 'Schedule home cleaning for Saturday')">
+                                <div class="service-icon-box">🧹</div>
+                                <h4>Cleaning</h4>
+                                <p>Deep home & kitchen</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Repairs', 'Book AC repair service')">
+                                <div class="service-icon-box">🔧</div>
+                                <h4>Repairs</h4>
+                                <p>Appliance maintenance</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Plumbing', 'Book a plumber for bathroom tap leak')">
+                                <div class="service-icon-box">💧</div>
+                                <h4>Plumbing</h4>
+                                <p>Verified technicians</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Electrical', 'Book an electrician for switchboard')">
+                                <div class="service-icon-box">⚡</div>
+                                <h4>Electrical</h4>
+                                <p>Safe home wiring</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-category-block">
+                        <div class="category-header">📱 UTILITY & RECHARGES</div>
+                        <div class="services-row">
+                            <div class="service-card" onclick="triggerServiceVoice('Gas Refill', 'Book LPG gas cylinder refill')">
+                                <div class="service-icon-box">⛽</div>
+                                <h4>Gas Refill</h4>
+                                <p>Indane, HP & Bharat Gas</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Recharge', 'Recharge Airtel mobile for 599')">
+                                <div class="service-icon-box">📱</div>
+                                <h4>Recharge</h4>
+                                <p>Mobile prepaid/postpaid</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                            <div class="service-card" onclick="triggerServiceVoice('Bills', 'Pay electricity bill')">
+                                <div class="service-icon-box">💳</div>
+                                <h4>Bill Payment</h4>
+                                <p>Electricity, water, Wi-Fi</p>
+                                <span class="service-badge-prompt">🎙️ Tell Onevo</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. HISTORY VIEW -->
+                <section id="view-history" class="view-pane">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">FAMILY ACTIVITY & BOOKINGS</div>
+                            <h1 class="header-title">Transaction History</h1>
+                            <p class="header-subtitle">Real-time ledger of rides, food orders, bookings, and wallet deductions.</p>
+                        </div>
+                    </div>
+
+                    <div id="historyTimelineWrap">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- 6. SUPPORT VIEW -->
+                <section id="view-support" class="view-pane">
+                    <div class="greeting-header">
+                        <div>
+                            <div class="header-date">24/7 FAMILY CONCIERGE</div>
+                            <h1 class="header-title">Contextual Support</h1>
+                            <p class="header-subtitle">Select what you need help with. Onevo resolves issues directly with service providers.</p>
+                        </div>
+                    </div>
+
+                    <div class="support-options-grid">
+                        <div class="support-option-card" onclick="handleSupportOption('active')">
+                            <div class="support-card-badge">🚕</div>
+                            <h3>Active Service</h3>
+                            <p>Mom is on the way (Suresh K. · Swift Dzire). Driver contact, route delay or cancellation.</p>
+                        </div>
+                        <div class="support-option-card" onclick="handleSupportOption('history')">
+                            <div class="support-card-badge">📜</div>
+                            <h3>Recent Bookings</h3>
+                            <p>Questions regarding recent Cab, Bus, or Food transactions, receipts, or refunds.</p>
+                        </div>
+                        <div class="support-option-card" onclick="handleSupportOption('wallet')">
+                            <div class="support-card-badge">💳</div>
+                            <h3>Wallet & Payments</h3>
+                            <p>Auto top-up limits, maximum balance rules, deduction inquiries, or family allowance.</p>
+                        </div>
+                        <div class="support-option-card" onclick="handleSupportOption('account')">
+                            <div class="support-card-badge">👥</div>
+                            <h3>Account & Family Roles</h3>
+                            <p>Admin management, protected child profiles, or senior citizen assistance mode.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
         </div>
     </div>
 
+    <!-- Slide-Out Detail Drawer for History Items -->
+    <div id="drawerOverlay" class="drawer-overlay" onclick="closeDrawer()"></div>
+    <div id="detailDrawer" class="slide-drawer">
+        <div class="drawer-header">
+            <div>
+                <h3 id="drawerTitle" style="font-size:18px; font-weight:800; color:var(--text-navy);">Booking Details</h3>
+                <span id="drawerBadge" class="history-status-badge" style="margin-top:4px; display:inline-block;">Completed</span>
+            </div>
+            <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
+        </div>
+        <div id="drawerContentBody" style="display:flex; flex-direction:column; gap:4px;">
+            <!-- Populated dynamically -->
+        </div>
+        <div style="margin-top:24px;">
+            <button class="primary-action-btn" style="background:#0F172A;" onclick="askVoiceAboutDrawerBooking()">
+                🎙️ Ask Onevo About This Booking
+            </button>
+        </div>
+    </div>
+
+    <!-- ------------------------------------------------------------- -->
+    <!-- GLOBAL PERSISTENT VOICE ASSISTANT HUD -->
+    <!-- ------------------------------------------------------------- -->
+    <div class="voice-hud-container">
+
+        <!-- Expandable Conversational Panel -->
+        <div id="voiceConversationPanel" class="voice-conversation-panel">
+            <div class="panel-header">
+                <div class="panel-header-left">
+                    <span style="font-size:16px;">🎙️</span>
+                    <span>ONEVO VOICE ASSISTANT</span>
+                    <span id="voiceStatusPill" style="font-size:11px; font-weight:700; background:#ECFDF5; color:#059669; padding:2px 8px; border-radius:999px;">READY</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <select id="voiceLanguageSelect" class="lang-select" onchange="onLanguageChange(this.value)">
+                        <option value="en-IN">English (India)</option>
+                        <option value="te-IN">తెలుగు (Telugu)</option>
+                        <option value="hi-IN">हिन्दी (Hindi)</option>
+                        <option value="ta-IN">தமிழ் (Tamil)</option>
+                    </select>
+                    <button style="background:none; border:none; cursor:pointer; font-weight:bold; color:#64748B;" onclick="toggleConversationPanel(false)">✕</button>
+                </div>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="conversationStream" class="panel-messages-wrap">
+                <div class="speech-bubble speech-assistant">
+                    <div class="bubble-label">ONEVO ASSISTANT</div>
+                    <div>Hello Rahul! I'm Onevo, your family action assistant. You can ask me to book cabs, buses, trains, flights, hotels, food, or manage your wallet. How can I help you today?</div>
+                </div>
+            </div>
+
+            <!-- Investor Demo Quick Chips -->
+            <div class="demo-chips-bar">
+                <span class="demo-chip" onclick="runDemoTurn('Book a cab from home to airport')">🚗 Cab to Airport</span>
+                <span class="demo-chip" onclick="runDemoTurn('Book a bus from Hyderabad to Vizag')">🚌 Bus to Vizag</span>
+                <span class="demo-chip" onclick="runDemoTurn('Add 500 rupees to my wallet')">💳 Add ₹500</span>
+                <span class="demo-chip" onclick="runDemoTurn('How much money is in my wallet?')">💰 Check Balance</span>
+                <span class="demo-chip" onclick="runDemoTurn('Order biryani to Manikonda')">🍔 Order Biryani</span>
+                <span class="demo-chip" onclick="runDemoTurn('Save as Brother Home')">📍 Save Brother Home</span>
+                <span class="demo-chip" onclick="runDemoTurn('Book a flight for 2500 rupees')">✈️ Flight Check</span>
+            </div>
+
+            <!-- Text Turn Input (Fallback / Fast demo typing) -->
+            <div class="panel-input-bar">
+                <input type="text" id="voiceTextInput" class="text-voice-input" placeholder="Type or click the microphone to speak with Onevo..." onkeydown="if(event.key==='Enter') sendTextTurn()">
+                <button class="send-turn-btn" onclick="sendTextTurn()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Persistent Floating Bar (Always Visible) -->
+        <div class="voice-hud-bar" onclick="toggleConversationPanel()">
+            <div class="voice-hud-left">
+                <button id="voiceMicBtn" class="voice-mic-btn" onclick="event.stopPropagation(); toggleVoiceRecording();" title="Click to speak">
+                    🎙️
+                </button>
+                <div class="voice-hud-texts">
+                    <span class="voice-hud-brand">ONEVO VOICE ASSISTANT</span>
+                    <span id="voicePromptText" class="voice-hud-prompt">"Send an auto from Brother Home to Kids Tuition"</span>
+                </div>
+            </div>
+            <div class="voice-hud-right">
+                <span class="try-saying-pill">Try saying "Hey Onevo"</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Hidden HTML5 Audio Element for Sarvam Bulbul v3 Playback -->
+    <audio id="ttsAudioPlayer" style="display:none;"></audio>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JAVASCRIPT APPLICATION ARCHITECTURE -->
     <script>
-        let conversationId = null;
-        let taskId = null;
-        let mediaRecorder = null;
-        let audioChunks = [];
-        let isRecording = false;
+        // -------------------------------------------------------------
+        // APPLICATION STATE
+        // -------------------------------------------------------------
+        let AppState = {
+            user: {
+                name: "Rahul Sharma",
+                role: "Primary Admin",
+                familyName: "Sharma Household",
+                avatar: "RS"
+            },
+            wallet: {
+                balance: 1420.0,
+                maxBalance: 5000.0,
+                transactions: []
+            },
+            family: {
+                name: "Sharma Household",
+                totalMembers: 5,
+                administrators: 2,
+                protectedAccounts: 3,
+                members: []
+            },
+            addresses: [],
+            activeServices: [],
+            history: [],
+            currentConversationId: null,
+            voice: {
+                state: "idle", // idle, listening, processing, speaking
+                language: "en-IN",
+                mediaRecorder: null,
+                audioChunks: []
+            },
+            selectedHistoryItem: null
+        };
 
-        const messagesBox = document.getElementById('messages-box');
-        const userInput = document.getElementById('user-input');
-        const btnSend = document.getElementById('btn-send');
-        const btnMic = document.getElementById('btn-mic');
-        const btnNewSession = document.getElementById('btn-new-session');
-        const voiceStatusBar = document.getElementById('voice-status-bar');
-        const voiceStatusText = document.getElementById('voice-status-text');
-        const detectedLangBadge = document.getElementById('detected-lang-badge');
+        // -------------------------------------------------------------
+        // INITIALIZATION & LIFECYCLE
+        // -------------------------------------------------------------
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Check onboarding persistence
+            const savedOnboard = localStorage.getItem('onevo_onboarded');
+            if (!savedOnboard) {
+                document.getElementById('onboardingBackdrop').classList.add('open');
+            }
 
-        // State displays
-        const taskStateEl = document.getElementById('task-state');
-        const dataPickupEl = document.getElementById('data-pickup');
-        const dataDestEl = document.getElementById('data-dest');
-        const dataServiceEl = document.getElementById('data-service');
-        const dataFareEl = document.getElementById('data-fare');
-        const dataBookingEl = document.getElementById('data-booking');
+            // Create initial active conversation ID
+            await initConversationSession();
 
-        async function initConversation() {
+            // Fetch state from server
+            await fetchOnevoState();
+        });
+
+        async function initConversationSession() {
             try {
-                const res = await fetch('/api/v1/conversations', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
+                const res = await fetch('/api/v1/conversations', { method: 'POST' });
+                if (res.ok) {
+                    const data = await res.json();
+                    AppState.currentConversationId = data.id;
+                }
+            } catch (e) {
+                console.error("Failed to init conversation session:", e);
+                AppState.currentConversationId = "demo_conv_" + Date.now();
+            }
+        }
+
+        async function fetchOnevoState() {
+            try {
+                const res = await fetch('/api/v1/onevo/state');
+                if (res.ok) {
+                    const data = await res.json();
+                    updateLocalState(data);
+                    renderAllViews();
+                }
+            } catch (e) {
+                console.error("Error fetching Onevo state:", e);
+            }
+        }
+
+        function updateLocalState(serverState) {
+            if (!serverState) return;
+            AppState.user = serverState.user || AppState.user;
+            AppState.wallet = serverState.wallet || AppState.wallet;
+            AppState.family = serverState.family || AppState.family;
+            AppState.addresses = serverState.addresses || AppState.addresses;
+            AppState.activeServices = serverState.active_services || AppState.activeServices;
+            AppState.history = serverState.history || AppState.history;
+
+            // Handle frequent address banner
+            const sugg = serverState.frequent_address_suggestion;
+            const banner = document.getElementById('frequentBanner');
+            if (sugg && sugg.has_suggestion) {
+                banner.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+            }
+        }
+
+        // -------------------------------------------------------------
+        // VIEW NAVIGATION
+        // -------------------------------------------------------------
+        function switchView(viewName) {
+            // Hide all view panes
+            document.querySelectorAll('.view-pane').forEach(el => el.classList.remove('active'));
+            // Remove active from nav links
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            const targetPane = document.getElementById(`view-${viewName}`);
+            const targetNav = document.getElementById(`nav-${viewName}`);
+
+            if (targetPane) targetPane.classList.add('active');
+            if (targetNav) targetNav.classList.add('active');
+        }
+
+        // -------------------------------------------------------------
+        // RENDERERS
+        // -------------------------------------------------------------
+        function renderAllViews() {
+            renderTopbarAndGreeting();
+            renderWalletCard();
+            renderActiveRideCard();
+            renderLocations();
+            renderFamilyMembers();
+            renderHistoryTimeline();
+        }
+
+        function renderTopbarAndGreeting() {
+            document.getElementById('topbarUserName').textContent = AppState.user.name;
+            document.getElementById('topbarFamilyName').textContent = AppState.family.name;
+            document.getElementById('topbarAvatar').textContent = AppState.user.avatar_initials || "RS";
+            document.getElementById('greetingName').textContent = `Good morning, ${AppState.user.name.split(' ')[0]}`;
+        }
+
+        function renderWalletCard() {
+            const bal = AppState.wallet.balance || 0;
+            document.getElementById('heroWalletBalance').textContent = `₹${bal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        function renderActiveRideCard() {
+            const card = document.getElementById('heroActiveRideCard');
+            const active = AppState.activeServices && AppState.activeServices.length > 0 ? AppState.activeServices[0] : null;
+
+            if (!active) {
+                card.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; text-align:center; padding:20px;">
+                        <span style="font-size:36px; margin-bottom:8px;">✨</span>
+                        <h3 style="font-size:16px; font-weight:700; color:var(--text-navy);">No Active Services</h3>
+                        <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Ask Onevo to book a cab, bus, train, flight, or food for your family.</p>
+                        <button class="primary-action-btn" style="width:auto; margin-top:14px; padding:8px 18px; font-size:12px;" onclick="triggerServiceVoice('Ride', 'Book a cab from home to airport')">
+                            🎙️ Book with Onevo
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            document.getElementById('activeBadgeText').textContent = active.badge || "ACTIVE SERVICE";
+            document.getElementById('activeEtaVal').textContent = `${active.eta_minutes} min`;
+            document.getElementById('activeRideTitle').textContent = active.title;
+            document.getElementById('activeRideSubtitle').textContent = active.subtitle;
+            document.getElementById('activePickupText').textContent = active.pickup || "Origin";
+            document.getElementById('activeDestText').textContent = active.destination || "Destination";
+            document.getElementById('activeDriverMeta').innerHTML = `<strong>${active.driver_name}</strong> · ${active.driver_rating || "4.8"} rating · ${active.notes || "Live on route"}`;
+
+            const percent = active.progress_percent || 65;
+            document.getElementById('activeProgressBar').style.width = `${percent}%`;
+            document.getElementById('activeMovingCar').style.left = `${percent}%`;
+        }
+
+        function renderLocations() {
+            const dashboardRow = document.getElementById('dashboardLocationsRow');
+            const fullGrid = document.getElementById('addressesFullGrid');
+
+            let html = '';
+            AppState.addresses.forEach(addr => {
+                html += `
+                    <div class="location-card" onclick="triggerLocationVoice('${addr.name}')">
+                        <div class="location-icon-wrap">${addr.icon || '📍'}</div>
+                        <div class="location-details">
+                            <h4>${addr.name}</h4>
+                            <p>${addr.address}</p>
+                            <span class="location-tag">${addr.category || 'Family'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (dashboardRow) dashboardRow.innerHTML = html;
+            if (fullGrid) fullGrid.innerHTML = html;
+        }
+
+        function renderFamilyMembers() {
+            // Stats
+            document.getElementById('statHouseholdSize').textContent = `${AppState.family.total_members || 5} members`;
+            document.getElementById('statAdmins').textContent = `${AppState.family.administrators || 2}`;
+            document.getElementById('statProtected').textContent = `${AppState.family.protected_accounts || 3}`;
+
+            const grid = document.getElementById('familyMembersGrid');
+            let html = '';
+
+            const members = AppState.family.members || [];
+            members.forEach(m => {
+                let badgeClass = 'role-pill-badge';
+                if (m.role === 'Primary Admin') badgeClass += ' role-pill-primary';
+                else if (m.role === 'Admin') badgeClass += ' role-pill-admin';
+                else if (m.role === 'Child Account') badgeClass += ' role-pill-child';
+                else if (m.role === 'Senior Citizen') badgeClass += ' role-pill-senior';
+
+                html += `
+                    <div class="member-card">
+                        <div>
+                            <div class="member-card-header">
+                                <div class="member-avatar" style="background:${m.avatar_color || '#4F46E5'};">
+                                    ${m.avatar_initials || 'RS'}
+                                </div>
+                                <div class="member-meta">
+                                    <div class="member-name-row">
+                                        <span class="member-name">${m.name}</span>
+                                        <span class="${badgeClass}">${m.role_badge || m.role.toUpperCase()}</span>
+                                    </div>
+                                    <div class="member-relation">${m.relation}</div>
+                                </div>
+                            </div>
+                            <div class="member-card-body">
+                                <div>
+                                    <div class="member-field-label">PHONE NUMBER</div>
+                                    <div class="member-field-val">${m.phone}</div>
+                                </div>
+                                <div>
+                                    <div class="member-field-label">AGE</div>
+                                    <div class="member-field-val">${m.age} years</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-card-footer">
+                            <div class="connection-status">
+                                <span class="connection-dot"></span>
+                                <span>${m.status || 'CONNECTED'}</span>
+                            </div>
+                            ${m.can_manage ? `<button class="member-action-btn" onclick="promptRoleChange('${m.id}', '${m.name}', '${m.role}')">Manage role</button>` : `<span style="font-size:11px; color:#94A3B8; font-weight:600;">${m.badge_note || 'Account creator'}</span>`}
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function renderHistoryTimeline() {
+            const wrap = document.getElementById('historyTimelineWrap');
+            if (!wrap) return;
+
+            const items = AppState.history || [];
+            if (items.length === 0) {
+                wrap.innerHTML = `<div style="text-align:center; padding:40px; color:#64748B;">No family transactions yet.</div>`;
+                return;
+            }
+
+            // Group by time_group
+            const groups = {};
+            items.forEach(it => {
+                const g = it.time_group || "TODAY";
+                if (!groups[g]) groups[g] = [];
+                groups[g].push(it);
+            });
+
+            let html = '';
+            for (const [groupName, groupItems] of Object.entries(groups)) {
+                html += `
+                    <div class="history-timeline-group">
+                        <div class="timeline-date-label">${groupName}</div>
+                        <div class="history-list">
+                `;
+                groupItems.forEach(item => {
+                    html += `
+                        <div class="history-card" onclick="openHistoryDetails('${item.id}')">
+                            <div class="history-left">
+                                <div class="history-icon-circle">${item.icon || '✨'}</div>
+                                <div class="history-meta">
+                                    <h4>${item.title}</h4>
+                                    <p>${item.route || item.subtitle || 'Service Booking'} · <span class="member-tag">${item.member || 'Rahul Sharma'}</span></p>
+                                </div>
+                            </div>
+                            <div class="history-right">
+                                <div class="history-amount">₹${item.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</div>
+                                <span class="history-status-badge">${item.status}</span>
+                            </div>
+                        </div>
+                    `;
                 });
-                const data = await res.json();
-                conversationId = data.id;
-                console.log('Active conversation session:', conversationId);
-            } catch (err) {
-                console.error('Failed to create conversation', err);
+                html += `</div></div>`;
+            }
+
+            wrap.innerHTML = html;
+        }
+
+        // -------------------------------------------------------------
+        // DRAWER FOR HISTORY DETAILS
+        // -------------------------------------------------------------
+        function openHistoryDetails(historyId) {
+            const item = AppState.history.find(h => h.id === historyId);
+            if (!item) return;
+
+            AppState.selectedHistoryItem = item;
+            document.getElementById('drawerTitle').textContent = item.title;
+            document.getElementById('drawerBadge').textContent = item.status;
+
+            const body = document.getElementById('drawerContentBody');
+            const d = item.details || {};
+
+            let rows = `
+                <div class="detail-row">
+                    <span class="detail-label">Service Type</span>
+                    <span class="detail-value">${item.service_type || 'Booking'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Booked By</span>
+                    <span class="detail-value">${d.booked_by || item.member || 'Rahul Sharma'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Date & Time</span>
+                    <span class="detail-value">${item.timestamp}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Total Amount</span>
+                    <span class="detail-value" style="color:#4F46E5; font-size:15px;">₹${item.amount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Payment Method</span>
+                    <span class="detail-value">Onevo Wallet</span>
+                </div>
+            `;
+
+            // Service specific details
+            if (d.booking_id) rows += `<div class="detail-row"><span class="detail-label">Booking ID</span><span class="detail-value">${d.booking_id}</span></div>`;
+            if (d.pnr) rows += `<div class="detail-row"><span class="detail-label">PNR / Ticket</span><span class="detail-value">${d.pnr}</span></div>`;
+            if (d.passenger) rows += `<div class="detail-row"><span class="detail-label">Passenger</span><span class="detail-value">${d.passenger}</span></div>`;
+            if (d.driver) rows += `<div class="detail-row"><span class="detail-label">Driver / Captain</span><span class="detail-value">${d.driver}</span></div>`;
+            if (d.vehicle) rows += `<div class="detail-row"><span class="detail-label">Vehicle</span><span class="detail-value">${d.vehicle}</span></div>`;
+            if (d.pickup) rows += `<div class="detail-row"><span class="detail-label">Pickup Location</span><span class="detail-value">${d.pickup}</span></div>`;
+            if (d.drop) rows += `<div class="detail-row"><span class="detail-label">Drop Destination</span><span class="detail-value">${d.drop}</span></div>`;
+            if (d.restaurant) rows += `<div class="detail-row"><span class="detail-label">Restaurant</span><span class="detail-value">${d.restaurant}</span></div>`;
+            if (d.items) rows += `<div class="detail-row"><span class="detail-label">Items</span><span class="detail-value">${d.items}</span></div>`;
+
+            body.innerHTML = rows;
+
+            document.getElementById('drawerOverlay').classList.add('open');
+            document.getElementById('detailDrawer').classList.add('open');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('open');
+            document.getElementById('detailDrawer').classList.remove('open');
+        }
+
+        function askVoiceAboutDrawerBooking() {
+            closeDrawer();
+            const item = AppState.selectedHistoryItem;
+            if (item) {
+                toggleConversationPanel(true);
+                runDemoTurn(`What is the status of my ${item.title}?`);
             }
         }
 
-        function appendMessage(text, isUser = false, subtext = null, audioBase64 = null) {
-            const bubble = document.createElement('div');
-            bubble.className = `message-bubble ${isUser ? 'message-user' : 'message-agent'}`;
-            
-            let content = text.replace(/\n/g, '<br/>');
-            if (subtext) {
-                content += `<div class="translation-subtext">${subtext}</div>`;
-            }
-            bubble.innerHTML = content;
-
-            if (audioBase64 && !isUser) {
-                const playBtn = document.createElement('button');
-                playBtn.className = 'audio-replay-btn';
-                playBtn.innerHTML = '🔊 Play Voice';
-                playBtn.onclick = () => playAudio(audioBase64);
-                bubble.appendChild(playBtn);
-            }
-
-            messagesBox.appendChild(bubble);
-            messagesBox.scrollTop = messagesBox.scrollHeight;
-        }
-
-        function playAudio(base64Data) {
-            if (!base64Data) return;
-            try {
-                const snd = new Audio("data:audio/wav;base64," + base64Data);
-                snd.play().catch(e => console.warn("Audio autoplay blocked by browser:", e));
-            } catch (err) {
-                console.error("Audio playback error:", err);
+        // -------------------------------------------------------------
+        // VOICE CONVERSATION & ASSISTANT HUD
+        // -------------------------------------------------------------
+        function toggleConversationPanel(forceState) {
+            const panel = document.getElementById('voiceConversationPanel');
+            const shouldOpen = forceState !== undefined ? forceState : !panel.classList.contains('open');
+            if (shouldOpen) {
+                panel.classList.add('open');
+                document.getElementById('voiceTextInput').focus();
+            } else {
+                panel.classList.remove('open');
             }
         }
 
-        async function updateTaskInfo(tId) {
-            if (!tId) return;
-            try {
-                const res = await fetch(`/api/v1/tasks/${tId}`);
-                if (!res.ok) return;
-                const task = await res.json();
-                taskStateEl.textContent = task.current_state || task.status;
-                
-                const collected = task.collected_data || {};
-                dataPickupEl.textContent = collected.pickup || collected.origin_city || collected.food || collected.service_name || '—';
-                dataDestEl.textContent = collected.destination || collected.destination_city || collected.delivery_location || collected.service_location || '—';
-                dataServiceEl.textContent = collected.ride_type || collected.travel_mode || (collected.service_type ? collected.service_type.toUpperCase() : '—');
-                dataFareEl.textContent = collected.fare_amount ? `₹${collected.fare_amount}` : '—';
-                
-                const result = task.result || {};
-                const bId = result.booking_id || result.pnr || result.order_id;
-                if (bId) {
-                    dataBookingEl.textContent = bId;
-                    taskStateEl.style.background = '#10b981';
+        function triggerServiceVoice(serviceName, defaultPrompt) {
+            toggleConversationPanel(true);
+            showToast(`Tell Onevo what you need for ${serviceName}`);
+            document.getElementById('voicePromptText').textContent = defaultPrompt;
+            appendAssistantBubble(`Sure! Tell me what you need for ${serviceName}. Where would you like to go or what would you like me to book?`);
+        }
+
+        function triggerLocationVoice(locationName) {
+            toggleConversationPanel(true);
+            runDemoTurn(`Book a cab to ${locationName}`);
+        }
+
+        function promptVoiceWalletTopup() {
+            toggleConversationPanel(true);
+            runDemoTurn(`Add 500 rupees to my wallet`);
+        }
+
+        function onLanguageChange(langCode) {
+            AppState.voice.language = langCode;
+            showToast(`Voice assistant language switched to ${langCode}`);
+        }
+
+        // Audio Recording via Browser MediaRecorder
+        async function toggleVoiceRecording() {
+            const micBtn = document.getElementById('voiceMicBtn');
+
+            if (AppState.voice.state === 'listening') {
+                // Stop recording
+                if (AppState.voice.mediaRecorder && AppState.voice.mediaRecorder.state !== 'inactive') {
+                    AppState.voice.mediaRecorder.stop();
                 }
-            } catch (err) {
-                console.error('Error fetching task info', err);
-            }
-        }
-
-        async function sendTurn(textVal = null, audioBlob = null) {
-            if (!conversationId) {
-                await initConversation();
+                return;
             }
 
-            if (audioBlob) {
-                // Audio upload turn
-                voiceStatusBar.style.display = 'flex';
-                voiceStatusText.textContent = 'Transcribing and processing with Sarvam AI...';
-
-                const formData = new FormData();
-                formData.append('file', audioBlob, 'input.webm');
-                formData.append('turn_id', 'turn_' + Date.now());
-
-                try {
-                    const res = await fetch(`/api/v1/voice/conversations/${conversationId}/audio`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    voiceStatusBar.style.display = 'none';
-
-                    if (!res.ok) {
-                        const err = await res.json();
-                        appendMessage('⚠️ ' + (err.detail || 'Voice processing error'), false);
-                        return;
-                    }
-
-                    const data = await res.json();
-                    detectedLangBadge.textContent = `Lang: ${data.user_language}`;
-
-                    // Show user's original language transcript!
-                    appendMessage(data.original_user_text, true, `Backend English: "${data.backend_english_text}"`);
-                    
-                    // Show assistant's localized response
-                    appendMessage(data.assistant_localized_text, false, null, data.audio_base64);
-
-                    // Auto-play Bulbul v3 voice
-                    if (data.audio_base64) {
-                        playAudio(data.audio_base64);
-                    }
-
-                    if (data.task_id) {
-                        taskId = data.task_id;
-                        await updateTaskInfo(taskId);
-                    }
-                } catch (err) {
-                    voiceStatusBar.style.display = 'none';
-                    appendMessage('⚠️ Voice request failed: ' + err.message, false);
-                }
-            } else if (textVal) {
-                // Multilingual text turn through voice gateway
-                try {
-                    const res = await fetch(`/api/v1/voice/conversations/${conversationId}/text-turn`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: textVal,
-                            turn_id: 'turn_' + Date.now()
-                        })
-                    });
-
-                    if (!res.ok) {
-                        appendMessage('⚠️ Error processing turn.', false);
-                        return;
-                    }
-
-                    const data = await res.json();
-                    detectedLangBadge.textContent = `Lang: ${data.user_language}`;
-
-                    // Display user message in original language
-                    appendMessage(data.original_user_text, true, data.user_language !== 'en-IN' ? `Backend English: "${data.backend_english_text}"` : null);
-
-                    // Display assistant localized message
-                    appendMessage(data.assistant_localized_text, false, null, data.audio_base64);
-
-                    // Play audio if available
-                    if (data.audio_base64) {
-                        playAudio(data.audio_base64);
-                    }
-
-                    if (data.task_id) {
-                        taskId = data.task_id;
-                        await updateTaskInfo(taskId);
-                    }
-                } catch (err) {
-                    appendMessage('⚠️ Error reaching voice gateway.', false);
-                }
-            }
-        }
-
-        // Microphone recording handlers
-        async function startRecording() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream);
+                AppState.voice.mediaRecorder = new MediaRecorder(stream);
+                AppState.voice.audioChunks = [];
 
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) audioChunks.push(e.data);
+                AppState.voice.mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) AppState.voice.audioChunks.push(e.data);
                 };
 
-                mediaRecorder.onstop = async () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    await sendTurn(null, audioBlob);
-                    stream.getTracks().forEach(track => track.stop());
+                AppState.voice.mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(AppState.voice.audioChunks, { type: 'audio/wav' });
+                    stream.getTracks().forEach(t => t.stop());
+                    await sendAudioTurn(audioBlob);
                 };
 
-                mediaRecorder.start();
-                isRecording = true;
-                btnMic.classList.add('recording');
-                voiceStatusBar.style.display = 'flex';
-                voiceStatusText.textContent = 'Listening... Speak now in Telugu, Hindi, or English';
+                AppState.voice.mediaRecorder.start();
+                setVoiceState('listening');
+                toggleConversationPanel(true);
             } catch (err) {
-                console.error("Microphone access error:", err);
-                alert("Microphone access was denied or not supported by this browser.");
+                console.warn("Microphone access denied or unavailable, switching to input mode:", err);
+                showToast("Microphone unavailable in this browser. You can type or use the quick chips below!");
+                toggleConversationPanel(true);
             }
         }
 
-        function stopRecording() {
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop();
-                isRecording = false;
-                btnMic.classList.remove('recording');
-                voiceStatusText.textContent = 'Processing audio...';
-            }
-        }
+        function setVoiceState(state) {
+            AppState.voice.state = state;
+            const micBtn = document.getElementById('voiceMicBtn');
+            const statusPill = document.getElementById('voiceStatusPill');
 
-        btnMic.addEventListener('click', () => {
-            if (!isRecording) {
-                startRecording();
+            micBtn.className = 'voice-mic-btn ' + state;
+
+            if (state === 'listening') {
+                statusPill.textContent = 'LISTENING...';
+                statusPill.style.background = '#FEE2E2';
+                statusPill.style.color = '#EF4444';
+                document.getElementById('voicePromptText').textContent = "Listening to your voice...";
+            } else if (state === 'processing') {
+                statusPill.textContent = 'THINKING...';
+                statusPill.style.background = '#FEF3C7';
+                statusPill.style.color = '#D97706';
+                document.getElementById('voicePromptText').textContent = "Onevo is processing...";
+            } else if (state === 'speaking') {
+                statusPill.textContent = 'SPEAKING...';
+                statusPill.style.background = '#ECFDF5';
+                statusPill.style.color = '#059669';
+                document.getElementById('voicePromptText').textContent = "Onevo is speaking...";
             } else {
-                stopRecording();
+                statusPill.textContent = 'READY';
+                statusPill.style.background = '#EEF2FF';
+                statusPill.style.color = '#4F46E5';
+                document.getElementById('voicePromptText').textContent = '"Send an auto from Brother Home to Kids Tuition"';
             }
-        });
+        }
 
-        function handleSend() {
-            const text = userInput.value.trim();
+        async function sendAudioTurn(audioBlob) {
+            setVoiceState('processing');
+            const formData = new FormData();
+            formData.append('file', audioBlob, 'speech.wav');
+            formData.append('language_code', AppState.voice.language);
+            formData.append('turn_id', 'turn_' + Date.now());
+
+            try {
+                const res = await fetch(`/api/v1/voice/conversations/${AppState.currentConversationId}/audio`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    handleVoiceTurnSuccess(data);
+                } else {
+                    const err = await res.json();
+                    appendAssistantBubble(`I couldn't process that: ${err.detail || 'Service error'}`);
+                    setVoiceState('idle');
+                }
+            } catch (e) {
+                console.error("Audio turn error:", e);
+                appendAssistantBubble("Network error while connecting to Onevo voice assistant.");
+                setVoiceState('idle');
+            }
+        }
+
+        async function sendTextTurn() {
+            const input = document.getElementById('voiceTextInput');
+            const text = input.value.trim();
             if (!text) return;
-            userInput.value = '';
-            sendTurn(text);
+            input.value = '';
+
+            await runDemoTurn(text);
         }
 
-        btnSend.addEventListener('click', handleSend);
-        userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') handleSend();
-        });
+        async function runDemoTurn(text) {
+            toggleConversationPanel(true);
+            appendUserBubble(text);
+            setVoiceState('processing');
 
-        function fillInput(text) {
-            userInput.value = text;
-            userInput.focus();
+            try {
+                const res = await fetch(`/api/v1/voice/conversations/${AppState.currentConversationId}/text`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        language_code: AppState.voice.language,
+                        turn_id: 'turn_' + Date.now()
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    handleVoiceTurnSuccess(data);
+                } else {
+                    const err = await res.json();
+                    appendAssistantBubble(`I couldn't complete that: ${err.detail || 'Service error'}`);
+                    setVoiceState('idle');
+                }
+            } catch (e) {
+                console.error("Text turn error:", e);
+                appendAssistantBubble("Network connection error. Please try again.");
+                setVoiceState('idle');
+            }
         }
 
-        btnNewSession.addEventListener('click', () => {
-            messagesBox.innerHTML = '';
-            appendMessage('How can I help you?', false);
-            taskStateEl.textContent = 'INITIAL';
-            taskStateEl.style.background = '#3b82f6';
-            dataPickupEl.textContent = '—';
-            dataDestEl.textContent = '—';
-            dataServiceEl.textContent = '—';
-            dataFareEl.textContent = '—';
-            dataBookingEl.textContent = '—';
-            detectedLangBadge.textContent = 'Lang: Auto-Detect (te, hi, en...)';
-            initConversation();
-        });
+        function handleVoiceTurnSuccess(turnData) {
+            // Append assistant response
+            const replyText = turnData.assistant_localized_text || turnData.assistant_english_text;
+            appendAssistantBubble(replyText, turnData.audio_base64);
 
-        // Initialize session on page load
-        initConversation();
+            // Sync state if returned
+            if (turnData.onevo_state_snapshot) {
+                updateLocalState(turnData.onevo_state_snapshot);
+                renderAllViews();
+            }
+
+            // Play Sarvam Bulbul v3 synthesized speech
+            if (turnData.audio_base64) {
+                playSarvamAudio(turnData.audio_base64);
+            } else {
+                setVoiceState('idle');
+            }
+        }
+
+        function playSarvamAudio(base64Data) {
+            try {
+                setVoiceState('speaking');
+                const player = document.getElementById('ttsAudioPlayer');
+                player.src = `data:audio/wav;base64,${base64Data}`;
+                player.onended = () => setVoiceState('idle');
+                player.onerror = () => setVoiceState('idle');
+                player.play().catch(e => {
+                    console.log("Audio autoplay prevented by browser:", e);
+                    setVoiceState('idle');
+                });
+            } catch (e) {
+                console.warn("Audio playback error:", e);
+                setVoiceState('idle');
+            }
+        }
+
+        function appendUserBubble(text) {
+            const stream = document.getElementById('conversationStream');
+            const bubble = document.createElement('div');
+            bubble.className = 'speech-bubble speech-user';
+            bubble.innerHTML = `
+                <div class="bubble-label">YOU</div>
+                <div>${escapeHtml(text)}</div>
+            `;
+            stream.appendChild(bubble);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function appendAssistantBubble(text, audioB64) {
+            const stream = document.getElementById('conversationStream');
+            const bubble = document.createElement('div');
+            bubble.className = 'speech-bubble speech-assistant';
+            
+            let audioBtnHtml = '';
+            if (audioB64) {
+                audioBtnHtml = `
+                    <div class="assistant-audio-controls">
+                        <button class="replay-audio-btn" onclick="playSarvamAudio('${audioB64}')">
+                            🔊 Play Voice
+                        </button>
+                    </div>
+                `;
+            }
+
+            bubble.innerHTML = `
+                <div class="bubble-label">ONEVO ASSISTANT</div>
+                <div>${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+                ${audioBtnHtml}
+            `;
+            stream.appendChild(bubble);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function escapeHtml(string) {
+            const el = document.createElement('div');
+            el.innerText = string;
+            return el.innerHTML;
+        }
+
+        // -------------------------------------------------------------
+        // LIVE SIMULATION & DEMO ACTIONS
+        // -------------------------------------------------------------
+        async function stepLiveSimulation() {
+            try {
+                const res = await fetch('/api/v1/onevo/active-service/step', { method: 'POST' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.active_service) {
+                        AppState.activeServices = [data.active_service];
+                        renderActiveRideCard();
+                        showToast(`Tracking updated: ETA ${data.active_service.eta_minutes} min (${data.active_service.status})`);
+                    }
+                }
+            } catch (e) {
+                console.error("Step tracking error:", e);
+            }
+        }
+
+        async function saveBrotherHomeAddress() {
+            try {
+                const res = await fetch('/api/v1/onevo/addresses/save-frequent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: "Brother Home" })
+                });
+                if (res.ok) {
+                    showToast("Brother Home saved to family addresses!");
+                    document.getElementById('frequentBanner').style.display = 'none';
+                    await fetchOnevoState();
+                }
+            } catch (e) {
+                console.error("Save address error:", e);
+            }
+        }
+
+        function dismissFrequentBanner() {
+            document.getElementById('frequentBanner').style.display = 'none';
+        }
+
+        async function promptRoleChange(memberId, name, currentRole) {
+            const newRole = currentRole === 'Admin' ? 'Adult Member' : 'Admin';
+            if (confirm(`Would you like to change ${name}'s role to ${newRole}?`)) {
+                try {
+                    const res = await fetch('/api/v1/onevo/family/role', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ member_id: memberId, new_role: newRole })
+                    });
+                    if (res.ok) {
+                        showToast(`Updated ${name}'s role to ${newRole}`);
+                        await fetchOnevoState();
+                    }
+                } catch (e) {
+                    console.error("Role update error:", e);
+                }
+            }
+        }
+
+        function handleSupportOption(topic) {
+            toggleConversationPanel(true);
+            if (topic === 'active') {
+                runDemoTurn("I need help with my active ride to Parents Hospital.");
+            } else if (topic === 'wallet') {
+                runDemoTurn("How does the Onevo family wallet balance work?");
+            } else if (topic === 'history') {
+                runDemoTurn("Can you show details for my last cab booking?");
+            } else {
+                runDemoTurn("I need support managing protected accounts in my household.");
+            }
+        }
+
+        function confirmResetOrLogout() {
+            if (confirm("Reset demo data and restart onboarding?")) {
+                localStorage.removeItem('onevo_onboarded');
+                fetch('/api/v1/onevo/reset', { method: 'POST' }).then(() => {
+                    location.reload();
+                });
+            }
+        }
+
+        // -------------------------------------------------------------
+        // ONBOARDING FLOW
+        // -------------------------------------------------------------
+        function showOnboardScreen(screenNum) {
+            for (let i = 1; i <= 5; i++) {
+                const s = document.getElementById(`onboardScreen${i}`);
+                if (s) s.style.display = i === screenNum ? 'block' : 'none';
+            }
+        }
+
+        function sendMockOTP() {
+            const phone = document.getElementById('onboardPhone').value;
+            document.getElementById('otpPhoneDisplay').textContent = "+91 " + phone;
+            showOnboardScreen(3);
+        }
+
+        function verifyOTPAndContinue() {
+            showOnboardScreen(4);
+        }
+
+        function requestContextualPermissionAndFinish() {
+            showOnboardScreen(5);
+        }
+
+        function completeOnboarding() {
+            const name = document.getElementById('onboardName').value || "Rahul Sharma";
+            const fam = document.getElementById('onboardFamily').value || "Sharma Household";
+
+            AppState.user.name = name;
+            AppState.family.name = fam;
+
+            localStorage.setItem('onevo_onboarded', 'true');
+            document.getElementById('onboardingBackdrop').classList.remove('open');
+            renderAllViews();
+            showToast("Welcome to ONEVO.AI! Everything your family needs, in one voice.");
+        }
+
+        // -------------------------------------------------------------
+        // TOAST NOTIFICATIONS
+        // -------------------------------------------------------------
+        function showToast(message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast-pill';
+            toast.innerHTML = `<span>💬</span><span>${escapeHtml(message)}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
     </script>
 </body>
 </html>

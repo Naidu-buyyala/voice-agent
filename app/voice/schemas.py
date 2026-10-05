@@ -31,3 +31,4 @@ class VoiceTurnResponse(BaseModel):
     audio_base64: Optional[str] = Field(None, description="Base64-encoded Bulbul v3 TTS audio in user's language")
     audio_format: str = Field("wav", description="Audio format of the synthesized response")
     voice_status: str = Field("success", description="Status of the voice layer processing (success, partial, tts_fallback)")
+    onevo_state_snapshot: Optional[dict[str, Any]] = Field(None, description="Current global Onevo state snapshot")
