@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     # Gemini AI (Phase 4)
     GEMINI_API_KEY: str = ""
 
+    # Sarvam AI Voice Layer
+    SARVAM_API_KEY: str = ""
+
     # Provider Options
     DEFAULT_RIDE_PROVIDER: Literal["mock", "uber"] = "mock"
     UBER_CLIENT_ID: str = ""

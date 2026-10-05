@@ -17,6 +17,7 @@ from app.db.models import Base
 from app.api.routes.conversations import router as conversations_router
 from app.api.routes.tasks import router as tasks_router
 from app.api.routes.uber_auth import router as uber_auth_router
+from app.api.routes.voice import router as voice_router
 
 
 @asynccontextmanager
@@ -52,6 +53,7 @@ def create_app() -> FastAPI:
     app.include_router(conversations_router, prefix="/api/v1")
     app.include_router(tasks_router, prefix="/api/v1")
     app.include_router(uber_auth_router, prefix="/api/v1")
+    app.include_router(voice_router, prefix="/api/v1")
 
     @app.get("/health", tags=["Health"])
     async def health_check():
