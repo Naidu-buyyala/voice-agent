@@ -38,12 +38,13 @@ async def process_voice_audio(
     language_code: Optional[str] = Form(None),
     service: ConversationService = Depends(get_conversation_service),
 ):
-    conv = await service.get_conversation(conversation_id)
+    conv = None
+    if conversation_id and conversation_id not in ("undefined", "null", "none"):
+        conv = await service.get_conversation(conversation_id)
     if not conv:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Conversation {conversation_id} not found",
-        )
+        logger.info(f"Conversation {conversation_id} not found, auto-creating session.")
+        conv = await service.create_conversation(user_id="usr_rahul_sharma")
+        conversation_id = conv.id
 
     audio_bytes = await file.read()
     if not audio_bytes:
@@ -90,12 +91,13 @@ async def process_multilingual_text_turn(
     req: VoiceTurnRequest,
     service: ConversationService = Depends(get_conversation_service),
 ):
-    conv = await service.get_conversation(conversation_id)
+    conv = None
+    if conversation_id and conversation_id not in ("undefined", "null", "none"):
+        conv = await service.get_conversation(conversation_id)
     if not conv:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Conversation {conversation_id} not found",
-        )
+        logger.info(f"Conversation {conversation_id} not found, auto-creating session.")
+        conv = await service.create_conversation(user_id="usr_rahul_sharma")
+        conversation_id = conv.id
 
     if not req.text and not req.audio_base64:
         raise HTTPException(

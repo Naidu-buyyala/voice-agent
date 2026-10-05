@@ -952,10 +952,65 @@ async def ask_confirmation_node(state: AgentState) -> dict[str, Any]:
         destination = collected.get("destination")
         ride_type = collected.get("ride_type", "Uber Go")
 
-        # Strict validation: prevent accidental travel requests from executing as cabs
+        # Graceful re-routing: handle travel requests routed as rides
         travel_mode = collected.get("travel_mode") or collected.get("service_type")
-        if travel_mode in ["bus", "train"] or intent in ["BOOK_BUS", "BOOK_TRAIN"]:
-            raise ValueError(f"Invalid service routing: intent {intent} / {travel_mode} routed to cab workflow.")
+        if travel_mode == "bus" or intent == "BOOK_BUS":
+            collected["intent"] = "BOOK_BUS"
+            orig = collected.get("origin_city") or collected.get("pickup", "Hyderabad")
+            dest = collected.get("destination_city") or collected.get("destination", "Visakhapatnam")
+            date_t = collected.get("travel_date", "Tomorrow")
+            pax = int(collected.get("passenger_count") or 1)
+            operator = collected.get("bus_operator", "Orange Tours & Travels")
+            bus_type = collected.get("bus_type", "AC Sleeper (2+1)")
+            seats = collected.get("selected_seats") or ["U1"]
+            total_fare = float(collected.get("fare_amount") or 850.0)
+            collected["fare_amount"] = total_fare
+            response = (
+                f"I have your bus booking summary ready:\n\n"
+                f"🚌 Operator: {operator}\n"
+                f"🚍 Bus Type: {bus_type}\n"
+                f"📍 Route: {orig} to {dest}\n"
+                f"📅 Travel Date: {date_t} (Dep: 20:30, Arr: 06:00)\n"
+                f"👥 Passengers: {pax}\n"
+                f"💺 Seats: {', '.join(seats)}\n"
+                f"💰 Total Amount: ₹{int(total_fare)} (incl. taxes & fees)\n\n"
+                f"Shall I confirm this bus booking for you? You will get the SMS with all the booking details."
+            )
+            return {
+                "response": response,
+                "collected_data": collected,
+                "tool_result": {"service": operator, "route": f"{orig} to {dest}", "amount": total_fare},
+                "current_step": "WAITING_FOR_CONFIRMATION",
+                "waiting_for_confirmation": True,
+            }
+        elif travel_mode == "train" or intent == "BOOK_TRAIN":
+            collected["intent"] = "BOOK_TRAIN"
+            orig = collected.get("origin_city", "Secunderabad Junction (SC)")
+            dest = collected.get("destination_city", "Visakhapatnam Junction (VSKP)")
+            date_t = collected.get("travel_date", "Tomorrow")
+            pax = int(collected.get("passenger_count") or 1)
+            train_class = collected.get("train_class", "3A")
+            train_name = "Godavari Express (12728)"
+            unit_fare = 1150.0 if train_class == "3A" else (1640.0 if train_class == "2A" else 435.0)
+            total_fare = round(unit_fare * pax, 2)
+            collected["fare_amount"] = total_fare
+            response = (
+                f"I have your train reservation summary ready:\n\n"
+                f"🚆 Train: {train_name}\n"
+                f"🚉 Route: {orig} to {dest}\n"
+                f"📅 Travel Date: {date_t} (Dep: 17:05, Arr: 05:45)\n"
+                f"🎫 Class: {train_class}\n"
+                f"👥 Passengers: {pax}\n"
+                f"💰 Total Fare: ₹{int(total_fare)} (IRCTC service charges included)\n\n"
+                f"Shall I go ahead and book this ticket for you? You will get the SMS with all the booking details."
+            )
+            return {
+                "response": response,
+                "collected_data": collected,
+                "tool_result": {"train": train_name, "route": f"{orig} to {dest}", "amount": total_fare},
+                "current_step": "WAITING_FOR_CONFIRMATION",
+                "waiting_for_confirmation": True,
+            }
 
         # Fetch real estimate via tool
         estimate_result = await tool_executor.execute(

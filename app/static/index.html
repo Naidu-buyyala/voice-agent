@@ -3108,12 +3108,18 @@
 
         async function sendAudioTurn(audioBlob) {
             setVoiceState('processing');
+            const tempBubbleId = 'user_turn_' + Date.now();
+            appendPendingUserBubble(tempBubbleId, "🎙️ Transcribing voice with Sarvam AI...");
+
             const formData = new FormData();
             formData.append('file', audioBlob, 'speech.wav');
             formData.append('language_code', AppState.voice.language);
             formData.append('turn_id', 'turn_' + Date.now());
 
             try {
+                if (!AppState.currentConversationId) {
+                    await initConversationSession();
+                }
                 const res = await fetch(`/api/v1/voice/conversations/${AppState.currentConversationId}/audio`, {
                     method: 'POST',
                     body: formData
@@ -3121,14 +3127,17 @@
 
                 if (res.ok) {
                     const data = await res.json();
-                    handleVoiceTurnSuccess(data);
+                    resolvePendingUserBubble(tempBubbleId, data.original_user_text, data.user_language, data.backend_english_text);
+                    handleVoiceTurnSuccess(data, true);
                 } else {
                     const err = await res.json();
+                    resolvePendingUserBubble(tempBubbleId, "🎙️ (Audio message)", null, null);
                     appendAssistantBubble(`I couldn't process that: ${err.detail || 'Service error'}`);
                     setVoiceState('idle');
                 }
             } catch (e) {
                 console.error("Audio turn error:", e);
+                resolvePendingUserBubble(tempBubbleId, "🎙️ (Audio message)", null, null);
                 appendAssistantBubble("Network error while connecting to Onevo voice assistant.");
                 setVoiceState('idle');
             }
@@ -3145,10 +3154,14 @@
 
         async function runDemoTurn(text) {
             toggleConversationPanel(true);
-            appendUserBubble(text);
+            const tempBubbleId = 'user_turn_' + Date.now();
+            appendUserBubble(text, null, tempBubbleId);
             setVoiceState('processing');
 
             try {
+                if (!AppState.currentConversationId) {
+                    await initConversationSession();
+                }
                 const res = await fetch(`/api/v1/voice/conversations/${AppState.currentConversationId}/text`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -3161,7 +3174,7 @@
 
                 if (res.ok) {
                     const data = await res.json();
-                    handleVoiceTurnSuccess(data);
+                    handleVoiceTurnSuccess(data, false);
                 } else {
                     const err = await res.json();
                     appendAssistantBubble(`I couldn't complete that: ${err.detail || 'Service error'}`);
@@ -3174,7 +3187,18 @@
             }
         }
 
-        function handleVoiceTurnSuccess(turnData) {
+        function handleVoiceTurnSuccess(turnData, isAudio) {
+            // Update active conversation ID
+            if (turnData.conversation_id) {
+                AppState.currentConversationId = turnData.conversation_id;
+            }
+
+            // Prominently update bottom persistent Voice HUD bar
+            if (turnData.original_user_text) {
+                const hudPrompt = document.getElementById('voicePromptText');
+                if (hudPrompt) hudPrompt.textContent = `You: "${turnData.original_user_text}"`;
+            }
+
             // Append assistant response
             const replyText = turnData.assistant_localized_text || turnData.assistant_english_text;
             appendAssistantBubble(replyText, turnData.audio_base64);
@@ -3210,13 +3234,47 @@
             }
         }
 
-        function appendUserBubble(text) {
+        function appendPendingUserBubble(id, placeholderText) {
             const stream = document.getElementById('conversationStream');
             const bubble = document.createElement('div');
+            bubble.id = id;
+            bubble.className = 'speech-bubble speech-user';
+            bubble.innerHTML = `
+                <div class="bubble-label" style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>YOU</span>
+                    <span style="font-size:9px; opacity:0.85;">🎙️ LIVE VOICE</span>
+                </div>
+                <div class="user-text-content" style="opacity:0.8; font-style:italic;">${escapeHtml(placeholderText)}</div>
+            `;
+            stream.appendChild(bubble);
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function resolvePendingUserBubble(id, text, langCode, englishTranslation) {
+            const bubble = document.getElementById(id);
+            if (!bubble) return;
+            const content = bubble.querySelector('.user-text-content');
+            if (content) {
+                content.style.opacity = '1';
+                content.style.fontStyle = 'normal';
+                let html = `<div>${escapeHtml(text || 'Audio message')}</div>`;
+                if (langCode && langCode !== 'en-IN' && englishTranslation && englishTranslation.toLowerCase() !== (text || '').toLowerCase()) {
+                    html += `<div style="font-size:11px; margin-top:6px; padding-top:4px; border-top:1px solid rgba(255,255,255,0.25); opacity:0.9;">🌐 <em>"${escapeHtml(englishTranslation)}"</em></div>`;
+                }
+                content.innerHTML = html;
+            }
+            const stream = document.getElementById('conversationStream');
+            stream.scrollTop = stream.scrollHeight;
+        }
+
+        function appendUserBubble(text, langCode, bubbleId) {
+            const stream = document.getElementById('conversationStream');
+            const bubble = document.createElement('div');
+            if (bubbleId) bubble.id = bubbleId;
             bubble.className = 'speech-bubble speech-user';
             bubble.innerHTML = `
                 <div class="bubble-label">YOU</div>
-                <div>${escapeHtml(text)}</div>
+                <div class="user-text-content">${escapeHtml(text)}</div>
             `;
             stream.appendChild(bubble);
             stream.scrollTop = stream.scrollHeight;
