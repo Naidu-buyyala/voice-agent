@@ -34,12 +34,13 @@ class ConversationService:
         """
         # 1. Inspect existing conversation messages for context
         conv = await self.get_conversation(conversation_id)
+        conversation_history = []
         prev_assistant_msg = None
         if conv and conv.messages:
-            for m in reversed(conv.messages):
+            for m in conv.messages:
+                conversation_history.append({"role": m.role, "content": m.content})
                 if m.role == "assistant":
                     prev_assistant_msg = m.content
-                    break
 
         # 2. Record incoming user message
         await self.conversation_repo.add_message(
@@ -60,6 +61,7 @@ class ConversationService:
                 "status": latest_task.status,
                 "collected_data": latest_task.collected_data,
                 "result": latest_task.result,
+                "created_at": latest_task.created_at.isoformat() if latest_task.created_at else None,
             }
 
         # 4. Invoke LangGraph via AgentService
@@ -70,19 +72,37 @@ class ConversationService:
                 task=active_task,
                 last_assistant_message=prev_assistant_msg,
                 latest_completed_task=latest_completed_data,
+                conversation_history=conversation_history,
             )
         )
 
         status_map = {
             "WAITING_FOR_USER": "WAITING_FOR_USER",
+            "COLLECTING_ROUTE": "WAITING_FOR_USER",
+            "COLLECTING_TRAVEL_DATE": "WAITING_FOR_USER",
+            "COLLECTING_DEPARTURE_TIME": "WAITING_FOR_USER",
+            "COLLECTING_PASSENGER_DETAILS": "WAITING_FOR_USER",
+            "SEARCHING_BUSES": "IN_PROGRESS",
+            "SELECTING_BUS": "WAITING_FOR_USER",
+            "SELECTING_SEATS": "WAITING_FOR_USER",
+            "SHOWING_FARE": "WAITING_FOR_CONFIRMATION",
             "WAITING_FOR_CONFIRMATION": "WAITING_FOR_CONFIRMATION",
+            "AWAITING_CONFIRMATION": "WAITING_FOR_CONFIRMATION",
+            "BOOKING_IN_PROGRESS": "IN_PROGRESS",
             "COMPLETED": "COMPLETED",
+            "BOOKED": "COMPLETED",
             "CANCELLED": "CANCELLED",
             "FAILED": "FAILED",
         }
         new_status = status_map.get(current_step, "IN_PROGRESS")
 
         # 5. Persist task updates or create new task if action was initiated
+        valid_action_steps = [
+            "WAITING_FOR_USER", "WAITING_FOR_CONFIRMATION", "IN_PROGRESS", "COMPLETED",
+            "COLLECTING_ROUTE", "COLLECTING_TRAVEL_DATE", "COLLECTING_DEPARTURE_TIME",
+            "COLLECTING_PASSENGER_DETAILS", "SELECTING_BUS", "SELECTING_SEATS",
+            "SHOWING_FARE", "AWAITING_CONFIRMATION", "BOOKING_IN_PROGRESS", "BOOKED"
+        ]
         if active_task:
             await self.task_service.update_task_state(
                 task=active_task,
@@ -94,10 +114,11 @@ class ConversationService:
             )
             ret_task_id = active_task.id
             ret_step = current_step
-        elif current_step in ["WAITING_FOR_USER", "WAITING_FOR_CONFIRMATION", "IN_PROGRESS", "COMPLETED"] and updated_data:
+        elif current_step in valid_action_steps and updated_data:
+            task_type = updated_data.get("intent") or "BOOK_RIDE"
             new_task = await self.task_service.create_task(
                 conversation_id=conversation_id,
-                task_type="BOOK_RIDE",
+                task_type=task_type,
                 current_state=current_step,
                 collected_data=updated_data,
             )

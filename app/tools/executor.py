@@ -5,7 +5,28 @@ from app.tools.ride_tools import (
     GetRideEstimateTool,
     BookRideTool,
 )
-from app.providers.factory import get_ride_provider
+from app.tools.service_tools import (
+    CheckHomeServiceAvailabilityTool,
+    BookHomeServiceTool,
+)
+from app.tools.food_tools import PlaceFoodOrderTool
+from app.tools.bus_tools import (
+    SearchBusesTool,
+    BookBusTool,
+    CancelBusTool,
+)
+from app.tools.train_tools import (
+    SearchTrainsTool,
+    BookTrainTool,
+    CancelTrainTool,
+)
+from app.providers.factory import (
+    get_ride_provider,
+    get_home_service_provider,
+    get_food_provider,
+    get_bus_provider,
+    get_train_provider,
+)
 
 
 class ToolExecutor:
@@ -20,10 +41,27 @@ class ToolExecutor:
         self._register_default_tools()
 
     def _register_default_tools(self) -> None:
-        provider = get_ride_provider()
-        self.register(GetRideOptionsTool(provider))
-        self.register(GetRideEstimateTool(provider))
-        self.register(BookRideTool(provider))
+        ride_provider = get_ride_provider()
+        self.register(GetRideOptionsTool(ride_provider))
+        self.register(GetRideEstimateTool(ride_provider))
+        self.register(BookRideTool(ride_provider))
+
+        home_provider = get_home_service_provider()
+        self.register(CheckHomeServiceAvailabilityTool(home_provider))
+        self.register(BookHomeServiceTool(home_provider))
+
+        food_provider = get_food_provider()
+        self.register(PlaceFoodOrderTool(food_provider))
+
+        bus_provider = get_bus_provider()
+        self.register(SearchBusesTool(bus_provider))
+        self.register(BookBusTool(bus_provider))
+        self.register(CancelBusTool(bus_provider))
+
+        train_provider = get_train_provider()
+        self.register(SearchTrainsTool(train_provider))
+        self.register(BookTrainTool(train_provider))
+        self.register(CancelTrainTool(train_provider))
 
     def register(self, tool: Tool) -> None:
         self._tools[tool.name] = tool
@@ -39,3 +77,4 @@ class ToolExecutor:
 
 # Singleton executor
 tool_executor = ToolExecutor()
+

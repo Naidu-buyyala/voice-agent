@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, List, Dict
 from app.agent.graph import agent_graph
 from app.agent.state import AgentState
 from app.db.models import TaskModel
@@ -18,12 +18,12 @@ class AgentService:
         task: Optional[TaskModel] = None,
         last_assistant_message: Optional[str] = None,
         latest_completed_task: Optional[dict[str, Any]] = None,
+        conversation_history: Optional[List[Dict[str, str]]] = None,
     ) -> tuple[str, str, dict[str, Any], Optional[dict[str, Any]], Optional[str]]:
         """
         Executes a turn through LangGraph and returns:
         (response_text, new_task_state, updated_collected_data, tool_result, error)
         """
-        # Prepare graph state
         collected = dict(task.collected_data) if task and task.collected_data else {}
         waiting_confirmation = (
             task.status == "WAITING_FOR_CONFIRMATION" if task else False
@@ -34,11 +34,16 @@ class AgentService:
             "task_id": task.id if task else None,
             "user_message": user_message,
             "last_assistant_message": last_assistant_message,
+            "conversation_history": conversation_history,
             "latest_completed_task": latest_completed_task,
-            "intent": None,
+            "intent": task.type if (task and task.type and task.type not in ["TASK", "UNKNOWN"]) else None,
             "collected_data": collected,
+            "preferences": None,
             "missing_fields": [],
+            "next_action": None,
             "_new_fields": None,
+            "_llm_reply": None,
+            "_needs_landmark_clarification": None,
             "current_step": task.current_state if task else "INITIAL",
             "waiting_for_confirmation": waiting_confirmation,
             "confirmation_received": None,

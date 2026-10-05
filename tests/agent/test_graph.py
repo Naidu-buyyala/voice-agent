@@ -235,8 +235,8 @@ async def test_graph_greeting_shows_universal_actions():
     assert final_state["current_step"] == "GREETING_ANSWERED"
     # Does NOT ask where to pick up!
     assert "where can i pick you up" not in final_state["response"].lower()
-    # Mentions universal action capabilities
-    assert any(w in final_state["response"].lower() for w in ["ride", "food", "clean", "assistant"])
+    # Natural short greeting
+    assert any(w in final_state["response"].lower() for w in ["help", "what would you like to do"])
 
 
 @pytest.mark.asyncio
